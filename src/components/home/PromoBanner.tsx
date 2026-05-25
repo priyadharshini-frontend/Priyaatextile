@@ -28,12 +28,12 @@ export const PromoBanner = () => {
             </div>
 
             <div className="relative h-[500px]">
-              <Image
+              {/* <Image
                 src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=1000"
                 alt="Wedding Saree"
                 fill
                 className="object-cover"
-              />
+              /> */}
             </div>
           </div>
         </div>

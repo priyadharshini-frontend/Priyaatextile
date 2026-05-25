@@ -1,146 +1,270 @@
 'use client';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {  Bars3Icon,  XMarkIcon,  MagnifyingGlassIcon,  HeartIcon,  ShoppingBagIcon,  UserIcon,} from '@heroicons/react/24/outline';const navigation = [  { name: 'Home', href: '/' },  { name: 'Collection', href: '/collection' },  { name: 'Sarees', href: '/products' },  { name: 'About Us', href: '/about' },  { name: 'Our Story', href: '/story' },  { name: 'Contact', href: '/contact' },];
+import {
+  Bars3Icon,
+  XMarkIcon,
+  MagnifyingGlassIcon,
+  HeartIcon,
+  ShoppingBagIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline';
 
+const navigation = [
+  {
+    name: 'Sarees',
+    href: '/',
+    mega: [
+      {
+        title: 'Saree',
+        links: ['Pure Silk', 'Semi Slik', 'Cotton Silk','Trending Sarees','Chiffon Sarees','Georgette Sarees','Organza Sarees','Crepe Sarees','Tissue Sarees','Linen Sarees'],
+      },
+     
+    ],
+    banner: '/banners/sarees.jpg',
+    highlight: 'New Silk Collection',
+  },
+  {
+    name: 'Women',
+    href: '/collection',
+    mega: [
+      {
+        title: 'Ethnic',
+        links: ['Kurti','Co-ord-set','3 piece set','Bottom wear', 'Skirt','Dupatta','Maternity Wear','Night Wear','Readymade Blouse','Salwarset'],
+      },
+     
+    ],
+    banner: '/banners/women.jpg',
+    highlight: 'Festive Wear 2026',
+  },
+  
+   {
+    name: 'Kids',
+    href: '/collection',
+    mega: [
+      {
+        title: 'Ethnic',
+        links:['Shirt','T-Shirt','Denim','Kurta Set','Shirt & Dhoti Combo','Boys Casual Combo'],
+      },
+     
+    ],
+    banner: '/banners/women.jpg',
+    highlight: 'Festive Wear 2026',
+  },
+   {
+    name: 'Girls',
+    href: '/collection',
+    mega: [
+      {
+        title: 'Ethnic',
+        links: ['Choli','Frock','Kids Pattu Pavadai','Western Dress','Girls TShirt','Kids Dharvaset','Kids Jean'],
+      },
+    
+     
+    ],
+    banner: '/banners/women.jpg',
+    highlight: 'Festive Wear 2026',
+  },
+];
 
 export default function Navbar() {
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMobileMenu, setOpenMobileMenu] = useState(null);
 
-    return(
-       <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#2b0d0d]/95 backdrop-blur-md">
-      
-      {/* Top Strip */}
-      <div className="border-b border-white/10 bg-[#3d1212] py-2 text-center text-xs tracking-wide text-[#d4af37]">
+  return (
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#2b0d0d]/95 backdrop-blur-md">
+
+      {/* TOP STRIP */}
+      <div className="border-b border-white/10 bg-[#3d1212] py-2 text-center text-xs text-[#d4af37]">
         ✨ Free Shipping on all orders above ₹1999
       </div>
 
-      {/* Main Navbar */}
+      {/* NAVBAR */}
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        
-        {/* Logo */}
+
+        {/* LOGO */}
         <Link href="/" className="flex items-center gap-3">
-          
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37] text-lg font-bold text-black">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37] text-black font-bold">
             H
           </div>
-
           <div>
-            <h2 className="text-xl font-bold text-white">
-              Heritage
-            </h2>
-
+            <h2 className="text-xl font-bold text-white">Heritage</h2>
             <p className="text-xs tracking-[3px] text-[#d4af37]">
-              SAREE BOUTIQUE
+              Saree Boutique
             </p>
           </div>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden items-center gap-10 lg:flex">
+        {/* DESKTOP MENU */}
+        <div className="hidden lg:flex items-center gap-10">
+
           {navigation.map((item) => (
-            <Link
+            <div
               key={item.name}
-              href={item.href}
-              className="relative text-sm font-medium text-white transition hover:text-[#d4af37]"
+              className="relative"
+              onMouseEnter={() => {
+                if (hoverTimeout) clearTimeout(hoverTimeout);
+                setActiveMenu(item.name);
+              }}
+              onMouseLeave={() => {
+                const timeout = setTimeout(() => {
+                  setActiveMenu(null);
+                }, 200);
+                setHoverTimeout(timeout);
+              }}
             >
-              {item.name}
-            </Link>
+
+              {/* LINK */}
+              <Link
+                href={item.href}
+                className="text-sm font-medium text-white hover:text-[#d4af37]"
+              >
+                {item.name}
+              </Link>
+
+              {/* MEGA MENU */}
+              {activeMenu === item.name && item.mega && (
+                <div className="absolute left-1/2 top-10 -translate-x-1/2 w-[900px] h-[fit-content] bg-[#2b0d0d] border border-white/10 shadow-2xl p-6 grid grid-cols-4 gap-6 z-50">
+
+                  {/* LINKS */}
+                  <div className="col-span-3 grid grid-cols-3 gap-6">
+                    {item.mega.map((col) => (
+                      <div key={col.title}>
+                        <h3 className="text-[#d4af37] font-semibold mb-3">
+                          {col.title}
+                        </h3>
+
+                        <ul className="space-y-2">
+                          {col.links.map((link) => (
+                            <li key={link}>
+                              <a
+                                href="#"
+                                className="text-sm text-white hover:text-[#d4af37]"
+                              >
+                                {link}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* IMAGE BANNER */}
+                  <div className="col-span-1 relative">
+                    <div className="relative h-full w-full overflow-hidden rounded-lg">
+                      <Image
+                        src={item.banner}
+                        alt={item.name}
+                        fill
+                        className="object-cover scale-105 hover:scale-110 transition-transform duration-500"
+                      />
+
+                      <div className="absolute inset-0 bg-black/40" />
+
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <p className="text-xs text-[#d4af37]">Featured</p>
+                        <p className="text-sm font-semibold">
+                          {item.highlight}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+            </div>
           ))}
+
         </div>
 
-        {/* Desktop Icons */}
-        <div className="hidden items-center gap-5 lg:flex">
-          
-          <button className="text-white transition hover:text-[#d4af37]">
-            <MagnifyingGlassIcon className="h-5 w-5" />
-          </button>
-
-          <button className="text-white transition hover:text-[#d4af37]">
-            <HeartIcon className="h-5 w-5" />
-          </button>
-
-          <button className="relative text-white transition hover:text-[#d4af37]">
-            <ShoppingBagIcon className="h-5 w-5" />
-
-            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#d4af37] text-[10px] font-bold text-black">
-              2
-            </span>
-          </button>
-
-          <button className="text-white transition hover:text-[#d4af37]">
-            <UserIcon className="h-5 w-5" />
-          </button>
+        {/* ICONS */}
+        <div className="hidden lg:flex items-center gap-5 text-white">
+          <MagnifyingGlassIcon className="h-5 w-5 hover:text-[#d4af37]" />
+          <a href="/wishlist">
+          <HeartIcon className="h-5 w-5 hover:text-[#d4af37]" /></a>
+          <ShoppingBagIcon className="h-5 w-5 hover:text-[#d4af37]" />
+          <a href="/login"> <UserIcon className="h-5 w-5 hover:text-[#d4af37]" /></a>
+         
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* MOBILE BUTTON */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="text-white lg:hidden"
+          className="lg:hidden text-white"
         >
           <Bars3Icon className="h-7 w-7" />
         </button>
+
       </nav>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU (UNCHANGED ACCORDION) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden">
-          
-          <div className="absolute right-0 top-0 h-full w-[80%] bg-[#2b0d0d] p-6 shadow-2xl">
-            
-            {/* Mobile Header */}
-            <div className="mb-10 flex items-center justify-between">
-              
-              <h2 className="text-2xl font-bold text-[#d4af37]">
-                Heritage
-              </h2>
+        <div className="fixed inset-0 z-50 bg-black/70 lg:hidden">
+          <div className="absolute right-0 top-0 h-screen w-[85%] bg-[#2b0d0d] p-6 overflow-y-auto">
 
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-white"
-              >
-                <XMarkIcon className="h-7 w-7" />
+            <div className="flex justify-between mb-8">
+              <h2 className="text-[#d4af37] text-xl font-bold">Heritage</h2>
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <XMarkIcon className="h-7 w-7 text-white" />
               </button>
             </div>
 
-            {/* Mobile Navigation */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="border-b border-white/10 pb-4 text-lg text-white transition hover:text-[#d4af37]"
-                >
-                  {item.name}
-                </Link>
+                <div key={item.name} className="border-b border-white/10">
+
+                  <button
+                    onClick={() =>
+                      setOpenMobileMenu(
+                        openMobileMenu === item.name ? null : item.name
+                      )
+                    }
+                    className="w-full flex justify-between items-center py-4 text-white text-lg"
+                  >
+                    {item.name}
+                    <span className="text-[#d4af37]">
+                      {openMobileMenu === item.name ? '−' : '+'}
+                    </span>
+                  </button>
+
+                  {openMobileMenu === item.name && item.mega && (
+                    <div className="pb-4 pl-3 space-y-4">
+                      {item.mega.map((col) => (
+                        <div key={col.title}>
+                          <p className="text-[#d4af37] font-semibold text-sm mb-2">
+                            {col.title}
+                          </p>
+
+                          <div className="flex flex-col gap-1">
+                            {col.links.map((link) => (
+                              <a
+                                key={link}
+                                href="#"
+                                className="text-sm text-gray-300 hover:text-white"
+                              >
+                                {link}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                </div>
               ))}
             </div>
 
-            {/* Mobile Icons */}
-            <div className="mt-12 flex items-center gap-6">
-              
-              <button className="text-white transition hover:text-[#d4af37]">
-                <MagnifyingGlassIcon className="h-6 w-6" />
-              </button>
-
-              <button className="text-white transition hover:text-[#d4af37]">
-                <HeartIcon className="h-6 w-6" />
-              </button>
-
-              <button className="text-white transition hover:text-[#d4af37]">
-                <ShoppingBagIcon className="h-6 w-6" />
-              </button>
-
-              <button className="text-white transition hover:text-[#d4af37]">
-                <UserIcon className="h-6 w-6" />
-              </button>
-            </div>
           </div>
         </div>
       )}
-    </header>
 
+    </header>
   );
 }

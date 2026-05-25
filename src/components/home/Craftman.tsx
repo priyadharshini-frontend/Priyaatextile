@@ -6,12 +6,12 @@ export const Craftman = () => {
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
         
         <div className="relative h-[550px] overflow-hidden rounded-[40px]">
-          <Image
+          {/* <Image
             src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1000"
             alt="Craftsmanship"
             fill
             className="object-cover"
-          />
+          /> */}
         </div>
 
         <div>

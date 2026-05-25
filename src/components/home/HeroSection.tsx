@@ -7,7 +7,7 @@ const slides = [
   {
     id: 1,
     image:
-      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1200',
+      '/images/Banner/ban1.jpeg',
     title: 'Elegant Saree Collection',
     subtitle: 'Timeless Beauty For Every Occasion',
   },
@@ -15,7 +15,7 @@ const slides = [
   {
     id: 2,
     image:
-      'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=1200',
+      '/images/Banner/ban1.jpeg',
     title: 'Luxury Fashion Arrivals',
     subtitle: 'Premium Styles Crafted For You',
   },
@@ -23,7 +23,7 @@ const slides = [
   {
     id: 3,
     image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200',
+      '/images/Banner/ban1.jpeg',
     title: 'Festive Collection 2026',
     subtitle: 'Celebrate In Style With ShopHub',
   },
@@ -41,30 +41,19 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-black py-20">
+    <section className="pt-20">
       
     
 
       <div className="w-full">
-        
-        {/* Heading */}
-        {/* <div className="mb-14 text-center">
-          <h2 className="text-4xl font-bold text-white lg:text-5xl">
-            Trending Collections
-          </h2>
-
-          <p className="mt-4 text-gray-400 text-lg">
-            Explore premium styles with immersive shopping experience
-          </p>
-        </div> */}
-
+ 
         {/* Carousel */}
-        <div className="relative h-[500px] w-full overflow-hidden">
+        <div className="relative h-[100vh] w-full overflow-hidden">
           
           {slides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              className={`absolute inset-0 transition-all duration-1000 ease-in-out  h-full ${
                 currentSlide === index
                   ? 'opacity-100 scale-100'
                   : 'opacity-0 scale-110'
@@ -76,7 +65,7 @@ export default function HeroSection() {
                 src={slide.image}
                 alt={slide.title}
                 fill
-                className="object-cover"
+                className="object-fill" sizes='100vw'
               />
 
               {/* Overlay */}
