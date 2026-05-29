@@ -494,6 +494,8 @@ model images {
   full_url     String?   @db.VarChar(255)
   path         String?   @db.VarChar(255)
   filename     String?   @db.VarChar(255)
+  product_id   String?   @db.Uuid
+  products     products? @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "images_product_id_foreign")
 }
 
 model orders {
@@ -510,6 +512,7 @@ model products {
   original_price Float?    @db.Real
   current_price  Float?    @db.Real
   description    String?
+  images         images[]
 }
 
 model reviews {

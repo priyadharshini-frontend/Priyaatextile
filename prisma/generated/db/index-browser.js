@@ -518,7 +518,8 @@ exports.Prisma.ImagesScalarFieldEnum = {
   date_created: 'date_created',
   full_url: 'full_url',
   path: 'path',
-  filename: 'filename'
+  filename: 'filename',
+  product_id: 'product_id'
 };
 
 exports.Prisma.OrdersScalarFieldEnum = {
