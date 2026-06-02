@@ -41,7 +41,7 @@ export const Collection = () => {
   const filters = ['All', 'Silk', 'Cotton', 'Wedding', 'New'];
 
   return (
-    <section className="relative py-24 overflow-hidden" style={{ backgroundColor: '#faf7f2' }}>
+    <section className="relative lg:py-20 py-10 overflow-hidden" style={{ backgroundColor: '#faf7f2' }}>
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-96 h-96 opacity-3 rounded-full" style={{ backgroundColor: '#8b1e1e' }}></div>
       <div className="absolute bottom-0 left-0 w-72 h-72 opacity-2 rounded-full" style={{ backgroundColor: '#d4af37' }}></div>

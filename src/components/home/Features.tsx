@@ -58,7 +58,7 @@ export const Features = () => {
 
   return (
     <section 
-      className="relative py-32 overflow-hidden"
+      className="relative lg:py-32 py-10 overflow-hidden"
       style={{ 
         background: 'linear-gradient(135deg, #f8f5f0 0%, #faf8f5 50%, #f5f2ed 100%)'
       }}
@@ -146,7 +146,7 @@ export const Features = () => {
 
               {/* Main Card */}
               <div
-                className="relative h-full p-8 rounded-2xl backdrop-blur-sm overflow-hidden transition-all duration-500"
+                className="relative h-full lg:p-8 p-4 rounded-2xl backdrop-blur-sm overflow-hidden transition-all duration-500"
                 style={{
                   backgroundColor: hoveredIndex === index ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)',
                   border: `2px solid ${hoveredIndex === index ? '#8b1e1e' : 'rgba(139, 30, 30, 0.2)'}`,

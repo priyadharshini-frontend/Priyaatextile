@@ -53,7 +53,7 @@ export default function HeroSection() {
           {slides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out  h-full ${
+              className={`absolute inset-0 transition-all duration-1000 ease-in  h-full ${
                 currentSlide === index
                   ? 'opacity-100 scale-100'
                   : 'opacity-0 scale-110'

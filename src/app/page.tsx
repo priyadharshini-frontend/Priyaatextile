@@ -15,10 +15,7 @@ export default function Home() {
   return (
    <>
  
-       <Navbar/>
-
-  
-
+  <Navbar/>
    <HeroSection/>
    <Features/>
    <Category/>

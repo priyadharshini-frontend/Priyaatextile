@@ -91,7 +91,7 @@ export default function Navbar() {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37] text-black font-bold">
             H
           </div>
-          <div>
+          <div className='hidden md:block'>
             <h2 className="text-xl font-bold text-white">Heritage</h2>
             <p className="text-xs tracking-[3px] text-[#d4af37]">
               Saree Boutique
@@ -184,11 +184,13 @@ export default function Navbar() {
         </div>
 
         {/* ICONS */}
-        <div className="hidden lg:flex items-center gap-5 text-white">
+        <div className="flex items-center gap-5 text-white">
           <MagnifyingGlassIcon className="h-5 w-5 hover:text-[#d4af37]" />
           <a href="/wishlist">
           <HeartIcon className="h-5 w-5 hover:text-[#d4af37]" /></a>
+          <a href="/cart">
           <ShoppingBagIcon className="h-5 w-5 hover:text-[#d4af37]" />
+          </a>
           <a href="/login"> <UserIcon className="h-5 w-5 hover:text-[#d4af37]" /></a>
          
         </div>
