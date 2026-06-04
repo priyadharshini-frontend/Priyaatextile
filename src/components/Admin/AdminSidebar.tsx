@@ -65,7 +65,7 @@ export const AdminSidebar = ({ isOpen, activeSection, onSectionChange }) => {
 
   return (
     <aside
-      className={`bg-gradient-to-b from-gray-900 to-gray-800 text-white transition-all duration-300 overflow-hidden flex flex-col ${
+      className={`bg-[#3d1212] text-white transition-all duration-300 overflow-hidden flex flex-col ${
         isOpen ? 'w-64' : 'w-20'
       }`}
     >
@@ -87,7 +87,7 @@ export const AdminSidebar = ({ isOpen, activeSection, onSectionChange }) => {
               }}
               className={`w-full px-4 py-3 flex items-center gap-3 transition-all duration-200 group ${
                 activeSection === item.id
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#d4af37] text-white'
                   : 'text-gray-300 hover:bg-gray-700'
               }`}
             >

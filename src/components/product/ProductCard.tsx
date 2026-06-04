@@ -11,7 +11,7 @@ export const ProductCard = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect(); 
     setMousePos({
       x: (e.clientX - rect.left) / rect.width - 0.5,
       y: (e.clientY - rect.top) / rect.height - 0.5,
