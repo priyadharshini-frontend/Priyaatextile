@@ -23,13 +23,17 @@ export interface TokenPayload {
   role?: string;
 }
 
-export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+interface DecodedToken extends TokenPayload {
+  sessionId: string;
 }
 
-export function verifyToken(token: string): TokenPayload | null {
+export function generateToken(payload: TokenPayload, sessionId: string): string {
+  return jwt.sign({ ...payload, sessionId }, JWT_SECRET, { expiresIn: "7d" });
+}
+
+export function verifyToken(token: string): DecodedToken | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as TokenPayload;
+    return jwt.verify(token, JWT_SECRET) as DecodedToken;
   } catch {
     return null;
   }
@@ -44,16 +48,16 @@ export interface AuthUser {
 }
 
 export async function validateSession(token: string): Promise<AuthUser | null> {
-  const session = await db.sessions.findUnique({
-    where: { id: token },
-  });
-
-  if (!session || session.status === "inactive") {
+  const decoded = verifyToken(token);
+  if (!decoded || !decoded.sessionId) {
     return null;
   }
 
-  const decoded = verifyToken(token);
-  if (!decoded) {
+  const session = await db.sessions.findUnique({
+    where: { id: decoded.sessionId },
+  });
+
+  if (!session || session.status === "inactive") {
     return null;
   }
 
@@ -77,24 +81,35 @@ export async function validateSession(token: string): Promise<AuthUser | null> {
   };
 }
 
+export function generateSessionToken(): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 export async function createSession(
-  token: string,
+  userId: string,
   ipAddress: string | null | undefined
-): Promise<void> {
+): Promise<{ sessionId: string; sessionToken: string }> {
+  const sessionId = randomUUID();
+  const sessionToken = generateSessionToken();
+
   await db.sessions.create({
     data: {
-      id: token,
+      id: sessionId,
       status: "active",
       date_created: new Date(),
-      token: token,
+      token: sessionToken,
       ip_address: ipAddress ?? null,
     },
   });
+
+  return { sessionId, sessionToken };
 }
 
-export async function deleteSession(token: string): Promise<void> {
+export async function deleteSession(sessionId: string): Promise<void> {
   await db.sessions.delete({
-    where: { id: token },
+    where: { id: sessionId },
   });
 }
 

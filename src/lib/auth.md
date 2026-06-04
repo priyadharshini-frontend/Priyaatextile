@@ -10,18 +10,21 @@ Hashes a password using bcrypt with 10 salt rounds.
 ### `verifyPassword(password: string, hashedPassword: string): Promise<boolean>`
 Verifies a password against a bcrypt hash.
 
-### `generateToken(payload: TokenPayload): string`
+### `generateToken(payload: TokenPayload, sessionId: string): string`
 Generates a JWT token with 7-day expiration.
-- Payload: `{ userId, email, role? }`
+- Payload: `{ userId, email, role?, sessionId }`
+- `sessionId` is a UUID that identifies the session in the database
 
 ### `verifyToken(token: string): TokenPayload | null`
 Verifies and decodes a JWT token. Returns null if invalid/expired.
 
-### `createSession(token: string, ipAddress: string | null | undefined): Promise<void>`
-Creates a session record in the database.
+### `createSession(userId: string, ipAddress: string | null | undefined): Promise<{ sessionId: string; sessionToken: string }>`
+Creates a session record in the database with a UUID as id and a random hex token.
+- Returns the sessionId (UUID) and sessionToken (random hex string)
+- The JWT is NOT stored in the database - only the random sessionToken is stored
 
-### `deleteSession(token: string): Promise<void>`
-Deletes a session from the database.
+### `deleteSession(sessionId: string): Promise<void>`
+Deletes a session from the database by sessionId (UUID).
 
 ### `extractToken(req: NextRequest): string | null`
 Extracts JWT from `Authorization: Bearer <token>` header.
@@ -42,6 +45,7 @@ interface TokenPayload {
   userId: string;
   email: string;
   role?: string;
+  sessionId: string;
 }
 
 interface AuthUser {
