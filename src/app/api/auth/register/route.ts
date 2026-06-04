@@ -48,9 +48,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const token = generateToken({ userId: user.id, email: user.email! });
+    const { sessionId } = await createSession(
+      user.id,
+      req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null
+    );
 
-    await createSession(token, req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null);
+    const token = generateToken({ userId: user.id, email: user.email! }, sessionId);
 
     return NextResponse.json({ user, token }, { status: 201 });
   } catch (error) {
