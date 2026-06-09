@@ -1,59 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { verifyPassword, generateToken, createSession } from "@/lib/auth";
+import {
+  comparePassword,
+  generateToken,
+} from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
-    }
-
-    const user = await db.users.findFirst({
+    const user = await db.user.findUnique({
       where: { email },
     });
 
-    if (!user || !user.password) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Invalid credentials" },
+        { message: "Invalid credentials" },
         { status: 401 }
       );
     }
 
-    const isValid = await verifyPassword(password, user.password);
+    const isValid = await comparePassword(
+      password,
+      user.password
+    );
 
     if (!isValid) {
       return NextResponse.json(
-        { error: "Invalid credentials" },
+        { message: "Invalid credentials" },
         { status: 401 }
       );
     }
 
-    const { sessionId, sessionToken } = await createSession(
-      user.id,
-      req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null
-    );
+    const token = generateToken(user.id);
 
-    const token = generateToken({ userId: user.id, email: user.email! }, sessionId);
-
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        phone: user.phone,
-        status: user.status,
-      },
-      token,
+    const response = NextResponse.json({
+      message: "Login successful",
     });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return response;
   } catch (error) {
-    console.error("Login error:", error);
+    console.log(error);
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      { message: "Server error" },
       { status: 500 }
     );
   }

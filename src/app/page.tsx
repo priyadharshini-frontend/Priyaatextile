@@ -10,12 +10,15 @@ import Testimonial from "@/components/home/Testimonial";
 import InstaGallery from "@/components/home/InstaGallery";
 import NewsLetter from "@/components/home/NewsLetter";
 import Footer from "@/components/common/footer/footer";
+import { getCurrentUser } from "@/lib/curentUser";
 
-export default function Home() {
+export default async function Home() {
+  const users=await getCurrentUser()
+  console.log(users)
   return (
    <>
  
-  <Navbar/>
+  <Navbar user={users}/>
    <HeroSection/>
    <Features/>
    <Category/>

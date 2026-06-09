@@ -1,0 +1,78 @@
+import { NextResponse } from "next/server";
+import db from "@/lib/db";
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+
+    const { name, slug, categoryId } = body;
+
+    // 1. Validate input
+    if (!name || !slug || !categoryId) {
+      return NextResponse.json(
+        { message: "Enter all the details" },
+        { status: 400 }
+      );
+    }
+
+    // 2. Check category exists
+    const category = await db.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      return NextResponse.json(
+        { message: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    // 3. Create subcategory
+    const subcategory = await db.subCategory.create({
+      data: {
+        name,
+        slug,
+        categoryId,
+      },
+    });
+
+    // 4. Success response
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Subcategory created successfully",
+        data: subcategory,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const categoryId = searchParams.get("categoryId");
+
+    const subcategories = await db.subCategory.findMany({
+      where: categoryId ? { categoryId } : {},
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: subcategories,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error fetching subcategories" },
+      { status: 500 }
+    );
+  }
+}

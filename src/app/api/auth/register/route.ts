@@ -1,65 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { hashPassword, generateToken, createSession } from "@/lib/auth";
+import { hashPassword } from "@/lib/auth";
 import { randomUUID } from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, name, phone } = await req.json();
+    const { name, email, password } = await req.json();
 
-    if (!email || !password) {
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { message: "User already exists" },
         { status: 400 }
       );
     }
 
-    const existingUsers = await db.users.findMany({
-      where: { email },
-    });
-
-    if (existingUsers.length > 0) {
-      return NextResponse.json(
-        { error: "User already exists" },
-        { status: 409 }
-      );
-    }
-
     const hashedPassword = await hashPassword(password);
-    const userId = randomUUID();
 
-    const user = await db.users.create({
+    const user = await db.user.create({
       data: {
-        id: userId,
+        id: randomUUID(),
+        name,
         email,
         password: hashedPassword,
-        name: name || null,
-        phone: phone || null,
-        status: "active",
-        date_created: new Date(),
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        phone: true,
-        status: true,
-        date_created: true,
       },
     });
 
-    const { sessionId } = await createSession(
-      user.id,
-      req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null
-    );
-
-    const token = generateToken({ userId: user.id, email: user.email! }, sessionId);
-
-    return NextResponse.json({ user, token }, { status: 201 });
-  } catch (error) {
-    console.error("Register error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        message: "User created",
+        user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    status: user.status
+  }
+      },
+      { status: 201 }
+    );
+          console.log("user created")
+
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json(
+      { message: "Server error" },
       { status: 500 }
     );
   }

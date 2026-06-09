@@ -38,11 +38,6 @@ export default function Page() {
         setError(data.error || "Login failed");
         return;
       }
-
-      // Save token and user
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
       console.log("Login Success:", data);
 
       // Redirect after login
