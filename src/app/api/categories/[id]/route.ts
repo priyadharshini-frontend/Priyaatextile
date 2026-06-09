@@ -1,89 +1,103 @@
-import { NextResponse } from "next/server";
-import db from "@/lib/db";
+    import { NextResponse } from "next/server";
+    import db from "@/lib/db";
 
+    export async function GET(request:Request,{params}:any) {
 
-export async function PUT(request,{params}) {
-    try{
-         const {id}=await params;
-    const body=await request.json()
-    const {name,slug}=body
+        try{
+            const category=await db.category.findUnique({
+                where:{
+                    id:params.id,
+                },
+            
+            })
+            
 
-    if(!name){
-        return NextResponse.json({
-            message:"Name is required"
+            if(!category){
+                return NextResponse.json({
+                    message:"Category Not Found"
+                },{
+                    status:404
+                })
+            }
 
-        },{
-            status:400
+            return NextResponse.json(category)
+
         }
-    )
+        catch(error){
+  console.log("FULL ERROR:", error);
+
+            return NextResponse.json({
+                message:"Internal Serve Error"
+            },{
+                status:5000
+            })
+        }
+        
     }
-    const category=await db.category.update({
-        where:{
-            id
-        },
-        data:{
-            name,
-            slug,
-        },
-    })
 
-     return NextResponse.json({
-        message:"category updated successfully",
-        category
-     })
+ export async function PUT(request:Request,{params}:any){
+    try{
+        const body=await request.json()
 
+        const UpdatedCategory=await db.category.update({
+            where:{
+                id:params.id,
+            },
+            data:{
+                name:body.name,
+
+            }
+        })
+        return NextResponse.json(UpdatedCategory)
 
     }
     catch(error){
-        console.log(error)
         return NextResponse.json({
-            message:"server error"
-
-
+            message:"update Failed"
+        },{
+            status:500
         })
     }
-   
-    
-}
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
+ }
+// export async function DELETE(
+//   request: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   try {
+//     const { id } = params;
 
-    if (!id) {
-      return NextResponse.json(
-        { message: "ID is required" },
-        { status: 400 }
-      );
-    }
+//     if (!id) {
+//       return NextResponse.json(
+//         { error: "Category id is required" },
+//         { status: 400 }
+//       );
+//     }
 
-    const existingCategory = await db.category.findUnique({
-      where: { id },
-    });
+//     const existingCategory = await db.category.findUnique({
+//       where: { id },
+//     });
 
-    if (!existingCategory) {
-      return NextResponse.json(
-        { message: "Category not found" },
-        { status: 404 }
-      );
-    }
+//     if (!existingCategory) {
+//       return NextResponse.json(
+//         { message: "Category not found" },
+//         { status: 404 }
+//       );
+//     }
 
-    await db.category.delete({
-      where: { id },
-    });
+//     await db.category.delete({
+//       where: { id },
+//     });
 
-    return NextResponse.json(
-      { message: "Category deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("DELETE CATEGORY ERROR:", error);
+//     return NextResponse.json({ message: "Deleted successfully" });
+//   } catch (error) {
+//     return NextResponse.json(
+//       { error: String(error) },
+//       { status: 500 }
+//     );
+//   }
+// }
 
-    return NextResponse.json(
-      { message: "Internalsss server error" },
-      { status: 500 }
-    );
-  }
+export async function DELETE(request:Request, { params }) {
+  console.log("PARAMS:", params);
+  return Response.json(params);
 }

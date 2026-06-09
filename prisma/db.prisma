@@ -43,6 +43,7 @@ model SubCategory {
 model Product {
   id          String  @id @default(cuid())
   name        String
+  slug        string
   description String?
   price       Float
   discount    Float?  @default(0)

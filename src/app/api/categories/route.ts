@@ -1,74 +1,80 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
-import { Category } from "@/components/home/Category";
 
 
+export async function POST(request:Request){
+    try{
+        const body=await request.json()
 
-export async function POST(request) {
-//get data from body
+        const{name}=body
 
-try{
-  const body =await request.json();
+        if(!name){
+            return NextResponse.json({
+                message:"Name or Slug not exists"
+            },{
+                status:400
+            })
+        }
 
-//variables for fields
-    const {name,slug}=body;
-//conditon checking
-    if(!name || !slug){
+            
+        const slug =name.toLowerCase().replace(/\s+/g,"-")
+
+
+        const existing= await db.category.findUnique({
+            where:{slug},
+        })
+
+        if(existing){
+            return NextResponse.json({
+                message:"Category Already Exixts"
+            })
+        }
+
+        const category =await db.category.create({
+            data:{
+                name,
+                slug,
+            }
+        })
         return NextResponse.json({
-            message:"Name and Slug are required"
-        },
-        {
-            status:400,
-        }
-    )
+            success:true,
+            message:"Category Created Sucessfully",
+            data:category,
+        },{
+            status:201
+        })
     }
-    const category =await db.category.create({
-        data:{
-            name,
-            slug
-        }
-    })
-    return NextResponse.json({
-        message:"Category created successfully",
-        category
-    },
-{
-    status:201,
-})
-}
-catch(error){
-    console.log(error)
-
-    return NextResponse.json({
-        message:"Something went wrong"
-    },{
-        status:500,
-    })
-
-}
-  
+    catch(error){
+        return NextResponse.json({
+            message:"Internal server Error"
+        },{
+            status:500
+        })
+    }
 }
 export async function GET() {
-  try {
-    const categories = await db.category.findMany({
-      orderBy: {
-        created: "desc",
-      },
-    });
+    try{
+        const category=await db.category.findMany({
 
-    return NextResponse.json({
-      success: true,
-      data: categories,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Error fetching categories",
-      },
-      { status: 500 }
-    );
-  }
+            include:{
+                subCategories:true,
+            },
+            orderBy:{
+                created:"desc"
+            }
+        })
+        return NextResponse.json({
+            success:"true",
+            data:category,
+        })
+
+    }
+    catch(error){
+        return NextResponse.json({
+            message:"Internal Server Error"
+        },{
+            status:500
+        })
+    }
+    
 }
-
-

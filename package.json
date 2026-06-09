@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 next build",
     "start": "next start",
     "lint": "eslint",
     "db": "npx prisma db pull --schema prisma/db.prisma --force && npx prisma generate --schema prisma/db.prisma"
@@ -28,6 +28,7 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "19.2.4",
     "stripe": "^22.1.1",
+    "uuid": "^14.0.0",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
