@@ -11,7 +11,6 @@ export async function getCurrentUser() {
   if (!token) {
     return null;
   }
-
   const decoded = verifyToken(token);
 
   if (!decoded) {
