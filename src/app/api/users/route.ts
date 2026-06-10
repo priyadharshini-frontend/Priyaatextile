@@ -20,6 +20,10 @@ const token = cookieStore.get("token")?.value;
 console.log("TOKEN:", token);
 
 if (!token) {
-  return null;
+  return NextResponse.json(
+  { message: "User not found" },
+  { status: 404 }
+);
+
 }
 }

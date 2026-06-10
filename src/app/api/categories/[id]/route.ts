@@ -1,103 +1,91 @@
-    import { NextResponse } from "next/server";
-    import db from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import db from "@/lib/db";
 
-    export async function GET(request:Request,{params}:any) {
+/* ---------------- GET CATEGORY ---------------- */
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
 
-        try{
-            const category=await db.category.findUnique({
-                where:{
-                    id:params.id,
-                },
-            
-            })
-            
+    const category = await db.category.findUnique({
+      where: { id },
+    });
 
-            if(!category){
-                return NextResponse.json({
-                    message:"Category Not Found"
-                },{
-                    status:404
-                })
-            }
-
-            return NextResponse.json(category)
-
-        }
-        catch(error){
-  console.log("FULL ERROR:", error);
-
-            return NextResponse.json({
-                message:"Internal Serve Error"
-            },{
-                status:5000
-            })
-        }
-        
+    if (!category) {
+      return NextResponse.json(
+        { message: "Category Not Found" },
+        { status: 404 }
+      );
     }
 
- export async function PUT(request:Request,{params}:any){
-    try{
-        const body=await request.json()
+    return NextResponse.json(category);
+  } catch (error) {
+    console.log("FULL ERROR:", error);
 
-        const UpdatedCategory=await db.category.update({
-            where:{
-                id:params.id,
-            },
-            data:{
-                name:body.name,
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 
-            }
-        })
-        return NextResponse.json(UpdatedCategory)
+/* ---------------- PUT CATEGORY ---------------- */
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
 
+    const updatedCategory = await db.category.update({
+      where: { id },
+      data: {
+        name: body.name,
+      },
+    });
+
+    return NextResponse.json(updatedCategory);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Update Failed" },
+      { status: 500 }
+    );
+  }
+}
+
+/* ---------------- DELETE CATEGORY ---------------- */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    const existingCategory = await db.category.findUnique({
+      where: { id },
+    });
+
+    if (!existingCategory) {
+      return NextResponse.json(
+        { message: "Category not found" },
+        { status: 404 }
+      );
     }
-    catch(error){
-        return NextResponse.json({
-            message:"update Failed"
-        },{
-            status:500
-        })
-    }
- }
-// export async function DELETE(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const { id } = params;
 
-//     if (!id) {
-//       return NextResponse.json(
-//         { error: "Category id is required" },
-//         { status: 400 }
-//       );
-//     }
+    await db.category.delete({
+      where: { id },
+    });
 
-//     const existingCategory = await db.category.findUnique({
-//       where: { id },
-//     });
-
-//     if (!existingCategory) {
-//       return NextResponse.json(
-//         { message: "Category not found" },
-//         { status: 404 }
-//       );
-//     }
-
-//     await db.category.delete({
-//       where: { id },
-//     });
-
-//     return NextResponse.json({ message: "Deleted successfully" });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: String(error) },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-export async function DELETE(request:Request, { params }) {
-  console.log("PARAMS:", params);
-  return Response.json(params);
+    return NextResponse.json({
+      message: "Deleted successfully",
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: String(error) },
+      { status: 500 }
+    );
+  }
 }

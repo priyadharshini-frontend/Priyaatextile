@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function PUT(request, { params }) {
+/* ---------------- UPDATE SUBCATEGORY ---------------- */
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     const { name, slug, categoryId } = body;
@@ -45,10 +49,13 @@ export async function PUT(request, { params }) {
   }
 }
 
-
-export async function DELETE(request, { params }) {
+/* ---------------- DELETE SUBCATEGORY ---------------- */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // 1. Check if exists
     const existing = await db.subCategory.findUnique({

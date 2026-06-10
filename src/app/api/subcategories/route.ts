@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function POST(request) {
+export async function POST(request:NextRequest) {
   try {
     const body = await request.json();
 
@@ -56,7 +56,7 @@ export async function POST(request) {
 }
 
 
-export async function GET(request: Request) {
+export async function GET(request:NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const categoryId = searchParams.get("categoryId");

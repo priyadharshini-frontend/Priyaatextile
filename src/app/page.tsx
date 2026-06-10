@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Navbar from "@/components/common/navbar/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import { Features } from "@/components/home/Features";
 import { Category } from "@/components/home/Category";
-import { Collection } from "@/components/home/Collection";
+// import { Collection } from "@/components/home/Collection";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { Craftman } from "@/components/home/Craftman";
 import Testimonial from "@/components/home/Testimonial";
@@ -13,29 +12,22 @@ import Footer from "@/components/common/footer/footer";
 import { getCurrentUser } from "@/lib/curentUser";
 
 export default async function Home() {
-  const users=await getCurrentUser()
-  console.log(users)
+  const users = await getCurrentUser();
+
+
   return (
-   <>
- 
-  <Navbar user={users}/>
-   <HeroSection/>
-   <Features/>
-   <Category/>
-   <Collection/>
-   <PromoBanner/>
-   <Craftman/>
-   <Testimonial/>
-   <InstaGallery/>
-   <NewsLetter/>
-   
- 
-
-   <Footer/>
-
-   
-   </>
-        
-          
+    <>
+      <Navbar user={users} />
+      <HeroSection />
+      <Features />
+      <Category />
+      {/* <Collection /> */}
+      <PromoBanner />
+      <Craftman />
+      <Testimonial />
+      <InstaGallery />
+      <NewsLetter />
+      <Footer />
+    </>
   );
 }

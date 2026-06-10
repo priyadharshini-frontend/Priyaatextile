@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "NODE_OPTIONS=--max_old_space_size=4096 next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "db": "npx prisma db pull --schema prisma/db.prisma --force && npx prisma generate --schema prisma/db.prisma"
@@ -21,12 +21,12 @@
     "framer-motion": "^12.40.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.16.0",
-    "next": "16.2.6",
+    "next": "^16.2.7",
     "next-auth": "^4.24.14",
     "prisma": "^7.8.0",
-    "react": "19.2.4",
+    "react": "^19.2.7",
     "react-bootstrap": "^2.10.10",
-    "react-dom": "19.2.4",
+    "react-dom": "^19.2.7",
     "stripe": "^22.1.1",
     "uuid": "^14.0.0",
     "zustand": "^5.0.13"

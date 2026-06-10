@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,FormEvent} from "react";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,12 +14,13 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = async ( e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       setLoading(true);
       setError("");
+      
 
       const response = await fetch("/api/auth/login", {
         method: "POST",

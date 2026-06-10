@@ -1,15 +1,17 @@
 
-import Wishlist from "@/components/wishlist/wishlist";
+// import Wishlist from "@/components/wishlist/wishlist";
 import Navbar from "@/components/common/navbar/Navbar";
-export default function Page() {
+import { getCurrentUser } from "@/lib/curentUser";
+export default async function Page() {
+  const user=await getCurrentUser()
 
 
 
   return (
    <>
-   <Navbar/>
+   <Navbar user={user}/>
    
-   <Wishlist/>
+   {/* <Wishlist/> */}
    </>
    
   )
