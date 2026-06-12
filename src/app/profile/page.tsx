@@ -8,7 +8,7 @@ import Logoutbutton from "@/components/ui/Logoutbutton";
 const STATS = [
   { label: "Orders", value: "24" },
   { label: "Wishlist", value: "12" },
-  { label: "Rewards pts", value: "3,840" },
+ 
 ];
 
 const CARDS = [
@@ -77,7 +77,7 @@ export default async function ProfilePage() {
 
         .pp-root {
           min-height: 100vh;
-          background: #0d0d0d;
+          background:#1A0608;
           background-image:
             radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201,168,76,0.08) 0%, transparent 70%);
           padding: 56px 20px 80px;
@@ -96,7 +96,7 @@ export default async function ProfilePage() {
           border-radius: 20px;
           overflow: hidden;
           border: 1px solid rgba(201,168,76,0.18);
-          background: #141414;
+          background:#220C0E;
           padding: 52px 40px 40px;
           display: flex;
           align-items: flex-end;
@@ -192,9 +192,9 @@ export default async function ProfilePage() {
         /* ── Stats row ─────────────────────────────────────────────────── */
         .pp-stats {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 2px;
-          background: rgba(201,168,76,0.1);
+          background: #3A1215;
           border-radius: 14px;
           overflow: hidden;
           margin-bottom: 28px;
@@ -202,7 +202,7 @@ export default async function ProfilePage() {
         }
 
         .pp-stat {
-          background: #141414;
+          background:#3A1215;
           padding: 22px 20px;
           text-align: center;
         }
@@ -233,7 +233,7 @@ export default async function ProfilePage() {
         }
 
         .pp-card {
-          background: #141414;
+          background: #3A1215;  
           border: 1px solid rgba(255,255,255,0.06);
           border-radius: 16px;
           padding: 28px 24px;
@@ -261,7 +261,7 @@ export default async function ProfilePage() {
 
         .pp-card:hover {
           border-color: rgba(201,168,76,0.3);
-          background: #1a1813;
+          background:#6A4A20;
           transform: translateY(-2px);
         }
 
@@ -316,7 +316,7 @@ export default async function ProfilePage() {
           align-items: center;
           justify-content: space-between;
           padding: 24px 28px;
-          background: #141414;
+          background: #3A1215;
           border: 1px solid rgba(255,255,255,0.05);
           border-radius: 14px;
         }

@@ -11,7 +11,7 @@ export default function ProductInitializer() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   return null;
 }

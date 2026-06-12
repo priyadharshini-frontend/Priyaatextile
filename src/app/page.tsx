@@ -11,7 +11,6 @@ import InstaGallery from "@/components/home/InstaGallery";
 import Footer from "@/components/common/footer/footer";
 import { getCurrentUser } from "@/lib/curentUser";
 import { Categories } from "@/components/home/Categories";
-import ProductInitializer from "@/components/home/ProductInitialiser";
 
 export default async function Home() {
   const users = await getCurrentUser();
@@ -24,7 +23,6 @@ export default async function Home() {
     <>
       <Navbar user={users} />
       <HeroSection />
-      <ProductInitializer/>
       <Categories/>
       <Features />
       <Category />

@@ -72,13 +72,18 @@ export const Categories=()=>{
         </div>
 
         {/* Categories */}
-        <div className="flex gap-6 overflow-x-auto md:grid md:grid-cols-3 lg:grid-cols-6 md:overflow-visible pb-2">
+        <div className="  flex gap-6 overflow-x-auto
+  md:grid md:grid-cols-3 md:gap-8
+  lg:grid-cols-6 lg:gap-50
+  md:overflow-visible
+  pb-2 
+">
           {categories.map((category) => (
             <button
               key={category.id}
               className="flex-shrink-0 group text-center flex flex-col items-center"
             >
-              <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden border transition duration-300 group-hover:shadow-xl group-hover:scale-105">
+              <div className="w-30 h-30 md:w-55 md:h-55 rounded-full overflow-hidden border transition duration-300 group-hover:shadow-xl group-hover:scale-105">
                 <img
                   src={category.image}
                   alt={category.name}

@@ -49,6 +49,23 @@ const navigation = [
     highlightSub: 'New Season Arrivals',
   },
   {
+    name: 'Men',
+    href: '/collection',
+    mega: [
+      {
+        title: 'Traditional Wear',
+        links: ['Dhoti','Lungi','Shirt & Dhoti Set'],
+      },
+      {
+        title: 'More',
+        links: ['Causual Shorts','Formal Shorts','Mens Tshirt','Mens Kurta','Mens Shorts','Denim','Joggers'],
+      },
+    ],
+    banner: '/banners/women.jpg',
+    highlight: 'Festive Wear 2026',
+    highlightSub: 'New Season Arrivals',
+  },
+  {
     name: 'Kids',
     href: '/collection',
     mega: [
@@ -207,24 +224,52 @@ export default function Navbar({user}:NavbarProps) {
       <header className="nb-root" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}>
 
         {/* ── Top strip ── */}
-        <div style={{
-          background: 'linear-gradient(90deg, #3d1212 0%, #4a1818 50%, #3d1212 100%)',
-          borderBottom: '1px solid rgba(212,175,55,0.15)',
-          textAlign: 'center',
-          padding: '8px 16px',
-          fontSize: 11,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: '#d4af37',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-        }}>
-          <span style={{ opacity: 0.5 }}>✦</span>
-          Free Shipping on all orders above ₹1999
-          <span style={{ opacity: 0.5 }}>✦</span>
-        </div>
+      <div
+  className="overflow-hidden whitespace-nowrap"
+  style={{
+    background:
+      "linear-gradient(90deg, #3d1212 0%, #4a1818 50%, #3d1212 100%)",
+    borderBottom: "1px solid rgba(212,175,55,0.15)",
+    color: "#d4af37",
+  }}
+>
+  <div className="flex w-max animate-ticker py-2">
+    {/* Duplicate the content for seamless looping */}
+    {[...Array(2)].map((_, index) => (
+      <div
+        key={index}
+        className="flex items-center gap-2 px-12 text-[11px] uppercase tracking-[0.18em]"
+      >
+        <span className="opacity-50">✦</span>
+        <span>Free Shipping on all orders above ₹1999</span>
+        <span className="opacity-50">✦</span>
+
+        <span className="opacity-50 ml-8">✦</span>
+        <span>New Arrivals Just Dropped</span>
+        <span className="opacity-50">✦</span>
+
+        <span className="opacity-50 ml-8">✦</span>
+        <span>Cash on Delivery Available</span>
+        <span className="opacity-50">✦</span>
+      </div>
+    ))}
+  </div>
+
+  <style jsx>{`
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-ticker {
+      animation: ticker 20s linear infinite;
+    }
+  `}</style>
+</div>
 
         {/* ── Main nav ── */}
         <nav style={{
@@ -276,8 +321,8 @@ export default function Navbar({user}:NavbarProps) {
             {/* Logo */}
             <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
               <div style={{
-                width: 42,
-                height: 42,
+                width: 50,
+                height: 50,
                 borderRadius: '50%',
                 background: 'linear-gradient(135deg, #d4af37, #b8941e)',
                 display: 'flex',
@@ -285,11 +330,11 @@ export default function Navbar({user}:NavbarProps) {
                 justifyContent: 'center',
                 boxShadow: '0 0 0 1px rgba(212,175,55,0.3), 0 4px 20px rgba(212,175,55,0.2)',
               }}>
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 20, color: '#1a0808' }}>H</span>
+                <img src="/images/logo.png" alt="hbjhbj" />
               </div>
               <div style={{ display: 'none' }} className="md-logo">
-                <div className="nb-serif" style={{ fontSize: 22, fontWeight: 700, color: '#fff', lineHeight: 1, letterSpacing: '0.02em' }}>Heritage</div>
-                <div style={{ fontSize: 9, letterSpacing: '0.35em', textTransform: 'uppercase', color: '#d4af37', marginTop: 2, fontWeight: 400 }}>Saree Boutique</div>
+                <div style={{ fontSize: 9, letterSpacing: '0.35em', textTransform: 'uppercase', color: '#d4af37', marginTop: 2, fontWeight: 800 }}>SHREE</div>
+                <div className="nb-serif" style={{ fontSize: 22, fontWeight: 700, color: '#d4af37', lineHeight: 1, letterSpacing: '0.035em',textTransform: 'uppercase' }}>Priya's Boutique</div>
               </div>
               <style>{`.md-logo { display: block !important; } @media (max-width: 600px) { .md-logo { display: none !important; } }`}</style>
             </Link>

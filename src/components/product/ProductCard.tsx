@@ -14,11 +14,12 @@ type ProductCardProps = {
       created: string;
     };
   };
+  viewMode: 'grid' | 'list';
 };
 export default function ProductCard({
-  product,
+  product,viewMode
 }: ProductCardProps) {
- 
+ console.log('ProductCard viewMode:', viewMode);
 
   return (
     // <div className="group bg-white rounded-xl overflow-hidden border hover:shadow-xl transition duration-300">
@@ -74,9 +75,9 @@ export default function ProductCard({
     //     </button>
     //   </div>
     // </div>
-     <div className="group bg-white  overflow-hidden border border-gray-100 hover:border-gray-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+     <div className={`group bg-white  overflow-hidden border border-gray-100 hover:border-gray-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer ${viewMode === 'list' && 'flex '}`}>
       {/* Image */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
+      <div className="relative w-full h-72 overflow-hidden bg-gray-50">
         <img
           src={product.images}
           alt={product.name}
@@ -111,7 +112,7 @@ export default function ProductCard({
       <div className="px-4 pt-3.5 pb-4">
         {/* Category */}
         <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">
-          {product.category.name}
+          {/* {product.category.name} */}
         </p>
 
         {/* Name */}

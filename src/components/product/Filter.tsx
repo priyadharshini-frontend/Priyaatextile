@@ -1,190 +1,164 @@
 'use client';
 
-import { useState } from 'react';
-
-export type Filters = {
-  categories: string[];
-  priceRange: number[];
-  colors: string[];
-  materials: string[];
-  rating: number | null;
-};
-
-type FilterProps = {
-  onFilterChange?: (filters: Filters) => void;
-};
+interface FilterSidebarProps {
+  onClearFilters?: () => void;
+}
 
 const categories = [
-  { name: 'Kanjivaram', count: 124 },
-  { name: 'Banarasi', count: 98 },
-  { name: 'Silk Sarees', count: 156 },
-  { name: 'Cotton Sarees', count: 89 },
-  { name: 'Wedding Sarees', count: 76 },
+  'Kanjivaram',
+  'Banarasi',
+  'Cotton',
+  'Wedding',
 ];
 
-const colorOptions = [
-  { name: 'Red', hex: '#c41e3a' },
-  { name: 'Gold', hex: '#d4af37' },
-  { name: 'Green', hex: '#2d5016' },
-  { name: 'Blue', hex: '#1e3a5f' },
-  { name: 'Pink', hex: '#d4649a' },
-  { name: 'Purple', hex: '#6b3fa0' },
-  { name: 'Orange', hex: '#d97706' },
-  { name: 'White', hex: '#f5f5f5' },
+const colors = [
+  '#8B0000',
+  '#D4AF37',
+  '#2F4F4F',
+  '#FF69B4',
+  '#000000',
 ];
 
-const materialOptions = ['Silk', 'Cotton', 'Chiffon', 'Georgette', 'Jacquard'];
-
-const priceRanges = [
-  { label: 'Under ₹2,000', min: 0, max: 2000 },
-  { label: '₹2,000 - ₹5,000', min: 2000, max: 5000 },
-  { label: '₹5,000 - ₹10,000', min: 5000, max: 10000 },
-  { label: '₹10,000 - ₹20,000', min: 10000, max: 20000 },
-  { label: 'Above ₹20,000', min: 20000, max: 50000 },
+const materials = [
+  'Pure Silk',
+  'Soft Silk',
+  'Linen',
+  'Cotton',
 ];
 
-export const Filter = ({ onFilterChange }: FilterProps) => {
-  const [expandedSections, setExpandedSections] = useState({
-    categories: true,
-    price: true,
-    colors: true,
-    material: true,
-    rating: true,
-  });
-
-  const [filters, setFilters] = useState<Filters>({
-    categories: [],
-    priceRange: [1000, 50000],
-    colors: [],
-    materials: [],
-    rating: null,
-  });
-
-  const [localPriceRange, setLocalPriceRange] = useState<number[]>([
-    1000, 50000,
-  ]);
-
-  const updateFilters = (updated: Filters) => {
-    setFilters(updated);
-    onFilterChange?.(updated);
-  };
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
-
-  const handleCategoryChange = (category: string) => {
-    const updated = filters.categories.includes(category)
-      ? filters.categories.filter((c) => c !== category)
-      : [...filters.categories, category];
-
-    updateFilters({ ...filters, categories: updated });
-  };
-
-  const handleColorChange = (color: string) => {
-    const updated = filters.colors.includes(color)
-      ? filters.colors.filter((c) => c !== color)
-      : [...filters.colors, color];
-
-    updateFilters({ ...filters, colors: updated });
-  };
-
-  const handleMaterialChange = (material: string) => {
-    const updated = filters.materials.includes(material)
-      ? filters.materials.filter((m) => m !== material)
-      : [...filters.materials, material];
-
-    updateFilters({ ...filters, materials: updated });
-  };
-
-  const handleRatingChange = (rating: number) => {
-    const newRating = filters.rating === rating ? null : rating;
-    updateFilters({ ...filters, rating: newRating });
-  };
-
-  const handlePriceChange = (index: number, value: string) => {
-    const newRange = [...localPriceRange];
-    newRange[index] = Number(value);
-    setLocalPriceRange(newRange);
-  };
-
-  const applyPriceFilter = () => {
-    updateFilters({ ...filters, priceRange: localPriceRange });
-  };
-
-  const resetFilters = () => {
-    const reset: Filters = {
-      categories: [],
-      priceRange: [1000, 50000],
-      colors: [],
-      materials: [],
-      rating: null,
-    };
-
-    setFilters(reset);
-    setLocalPriceRange([1000, 50000]);
-    onFilterChange?.(reset);
-  };
-
-  const activeFilterCount =
-    filters.categories.length +
-    filters.colors.length +
-    filters.materials.length +
-    (filters.rating ? 1 : 0);
-
+export default function Filter({
+  onClearFilters,
+}: FilterSidebarProps) {
   return (
-    <div className="rounded-3xl border border-[#eadfce] bg-white p-6">
-      {/* HEADER */}
-      <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-bold">Filters</h2>
+    <aside className="rounded-3xl bg-white p-6 shadow-sm border border-[#eadfce]">
 
-        {activeFilterCount > 0 && (
-          <button onClick={resetFilters} className="text-sm text-red-600">
-            Reset
-          </button>
-        )}
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-[#3d1f1f]">
+          Filters
+        </h2>
+
+        <button
+          onClick={onClearFilters}
+          className="text-sm text-[#8b1e1e] hover:underline"
+        >
+          Clear All
+        </button>
       </div>
 
-      {/* CATEGORY */}
-      <div>
-        <h3 className="font-semibold mb-2">Categories</h3>
-        {categories.map((c) => (
-          <label key={c.name} className="flex gap-2">
-            <input
-              type="checkbox"
-              checked={filters.categories.includes(c.name)}
-              onChange={() => handleCategoryChange(c.name)}
-            />
-            {c.name}
-          </label>
-        ))}
+      {/* Categories */}
+      <div className="mb-8">
+        <h3 className="font-semibold mb-4 text-[#3d1f1f]">
+          Categories
+        </h3>
+
+        <div className="space-y-3">
+          {categories.map((category) => (
+            <label
+              key={category}
+              className="flex items-center gap-3 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-[#8b1e1e]"
+              />
+
+              <span className="text-gray-700">
+                {category}
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
 
-      {/* COLOR */}
-      <div className="mt-4">
-        <h3 className="font-semibold mb-2">Colors</h3>
-        <div className="flex gap-2 flex-wrap">
-          {colorOptions.map((c) => (
+      {/* Price */}
+      <div className="mb-8">
+        <h3 className="font-semibold mb-4 text-[#3d1f1f]">
+          Price Range
+        </h3>
+
+        <input
+          type="range"
+          min={1000}
+          max={50000}
+          className="w-full accent-[#8b1e1e]"
+        />
+
+        <div className="mt-2 flex justify-between text-sm text-gray-600">
+          <span>₹1,000</span>
+          <span>₹50,000</span>
+        </div>
+      </div>
+
+      {/* Colors */}
+      <div className="mb-8">
+        <h3 className="font-semibold mb-4 text-[#3d1f1f]">
+          Colors
+        </h3>
+
+        <div className="flex flex-wrap gap-3">
+          {colors.map((color) => (
             <button
-              key={c.name}
-              onClick={() => handleColorChange(c.name)}
-              style={{ backgroundColor: c.hex }}
-              className="w-6 h-6 rounded-full border"
+              key={color}
+              className="h-8 w-8 rounded-full border-2 border-gray-200 hover:scale-110 transition"
+              style={{ backgroundColor: color }}
             />
           ))}
         </div>
       </div>
 
-      {/* APPLY BUTTON */}
-      <button
-        onClick={applyPriceFilter}
-        className="w-full mt-6 bg-black text-white py-2 rounded"
-      >
-        Apply Filters
-      </button>
-    </div>
+      {/* Material */}
+      <div className="mb-8">
+        <h3 className="font-semibold mb-4 text-[#3d1f1f]">
+          Material
+        </h3>
+
+        <div className="space-y-3">
+          {materials.map((material) => (
+            <label
+              key={material}
+              className="flex items-center gap-3 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-[#8b1e1e]"
+              />
+
+              <span className="text-gray-700">
+                {material}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Rating */}
+      <div>
+        <h3 className="font-semibold mb-4 text-[#3d1f1f]">
+          Customer Rating
+        </h3>
+
+        <div className="space-y-3">
+          {[5, 4, 3].map((rating) => (
+            <label
+              key={rating}
+              className="flex items-center gap-3 cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="rating"
+                className="accent-[#8b1e1e]"
+              />
+
+              <span className="text-gray-700">
+                {'★'.repeat(rating)}
+                {'☆'.repeat(5 - rating)}
+                &nbsp;& Up
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </aside>
   );
-};
+}
