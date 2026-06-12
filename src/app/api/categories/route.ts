@@ -27,6 +27,8 @@ export async function POST(request:Request){
         if(existing){
             return NextResponse.json({
                 message:"Category Already Exixts"
+            },{
+                status:400
             })
         }
 
@@ -59,9 +61,9 @@ export async function GET() {
             include:{
                 subCategories:true,
             },
-            orderBy:{
-                created:"desc"
-            }
+           orderBy: {
+              created: "desc"
+}
         })
         return NextResponse.json({
             success:"true",
@@ -71,7 +73,8 @@ export async function GET() {
     }
     catch(error){
         return NextResponse.json({
-            message:"Internal Server Error"
+            message:"Internal Server Error",
+            error:String(error)
         },{
             status:500
         })

@@ -12,7 +12,6 @@ model user {
   name      String?
   email     String   @unique
   password  String
-  role      String   @default("user") 
   createdAt DateTime @default(now())
   status    String   @default("active")
 }
@@ -21,42 +20,46 @@ model Category {
   id      String   @id @default(cuid())
   name    String
   slug    String   @unique
-  created DateTime @default(now())
-
+  products   Product[] 
   subCategories SubCategory[]
-  products      Product[]
+  created DateTime @default(now())
 }
-
 model SubCategory {
-  id   String @id @default(cuid())
-  name String
-  slug String @unique
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  categoryId  String
+  category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  products    Product[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Product {
-  id          String  @id @default(cuid())
-  name        String
-  slug        string
-  description String?
-  price       Float
-  discount    Float?  @default(0)
-  stock       Int     @default(0)
+  id             String       @id @default(cuid())
 
-  images String[]
+  name           String
+  slug           String       @unique
+  description    String?
 
-  categoryId    String
-  subCategoryId String
+  price          Float
+  discount       Float        @default(0)
 
-  category    Category    @relation(fields: [categoryId], references: [id])
-  subCategory SubCategory @relation(fields: [subCategoryId], references: [id])
+  stock          Int          @default(0)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  images         String[]
+
+  isFeatured     Boolean      @default(false)
+  isBestSeller   Boolean      @default(false)
+
+  categoryId     String
+  category       Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  subCategoryId  String
+  subCategory    SubCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

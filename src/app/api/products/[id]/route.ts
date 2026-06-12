@@ -19,6 +19,8 @@ export async function PUT(
       images,
       categoryId,
       subCategoryId,
+      isFeatured,
+      isBestSeller,
     } = body;
 
     // 1. Check product exists
@@ -45,6 +47,8 @@ export async function PUT(
         images,
         categoryId,
         subCategoryId,
+        isFeatured,
+        isBestSeller,
       },
     });
 

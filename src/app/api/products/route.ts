@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function POST(request:NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
@@ -14,13 +14,16 @@ export async function POST(request:NextRequest) {
       images,
       categoryId,
       subCategoryId,
+      isFeatured,
+      isBestSeller,
     } = body;
 
     // 1. Validate
+    const slug = name.toLowerCase().replace(/\s+/g, "-");
     if (!name || !price || !categoryId || !subCategoryId) {
       return NextResponse.json(
         { message: "Required fields missing" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,7 +35,7 @@ export async function POST(request:NextRequest) {
     if (!category) {
       return NextResponse.json(
         { message: "Category not found" },
-        { status: 406 }
+        { status: 406 },
       );
     }
 
@@ -44,7 +47,7 @@ export async function POST(request:NextRequest) {
     if (!subCategory) {
       return NextResponse.json(
         { message: "SubCategory not found" },
-        { status: 406 }
+        { status: 406 },
       );
     }
 
@@ -52,6 +55,7 @@ export async function POST(request:NextRequest) {
     const product = await db.product.create({
       data: {
         name,
+        slug,
         description,
         price: Number(price),
         discount: Number(discount) || 0,
@@ -59,6 +63,8 @@ export async function POST(request:NextRequest) {
         images: images || [],
         categoryId,
         subCategoryId,
+        isFeatured,
+        isBestSeller,
       },
     });
 
@@ -71,8 +77,9 @@ export async function POST(request:NextRequest) {
     console.log(error);
 
     return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
+      { message: "Internal Server Error",
+      error: String(error)},
+      { status: 500},
     );
   }
 }
@@ -98,7 +105,7 @@ export async function GET() {
 
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500},
     );
   }
 }

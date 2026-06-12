@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function POST(request:NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { name, slug, categoryId } = body;
+    const { name, categoryId } = body;
 
     // 1. Validate input
-    if (!name || !slug || !categoryId) {
+    const slug = name.toLowerCase().replace(/\s+/g, "-");
+    if (!name || !categoryId) {
       return NextResponse.json(
         { message: "Enter all the details" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,7 +24,7 @@ export async function POST(request:NextRequest) {
     if (!category) {
       return NextResponse.json(
         { message: "Category not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -43,20 +44,19 @@ export async function POST(request:NextRequest) {
         message: "Subcategory created successfully",
         data: subcategory,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.log(error);
 
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-
-export async function GET(request:NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const categoryId = searchParams.get("categoryId");
@@ -72,7 +72,7 @@ export async function GET(request:NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { message: "Error fetching subcategories" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

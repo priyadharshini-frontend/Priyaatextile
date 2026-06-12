@@ -1,10 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const subcategory = await db.subCategory.findUnique({
+      where: {
+        id,
+      },
+    });
+    return NextResponse.json(subcategory);
+  } catch (error) {
+    return NextResponse.json({
+      message: "internal Server Error",
+    });
+  }
+}
 /* ---------------- UPDATE SUBCATEGORY ---------------- */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -20,7 +38,7 @@ export async function PUT(
     if (!existing) {
       return NextResponse.json(
         { message: "SubCategory not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -44,7 +62,7 @@ export async function PUT(
 
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -52,7 +70,7 @@ export async function PUT(
 /* ---------------- DELETE SUBCATEGORY ---------------- */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -65,7 +83,7 @@ export async function DELETE(
     if (!existing) {
       return NextResponse.json(
         { message: "SubCategory not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -82,8 +100,11 @@ export async function DELETE(
     console.log(error);
 
     return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
+      {
+        message:
+          "Cannot delete this subcategory because products are assigned to it.",
+      },
+      { status: 500 },
     );
   }
 }
