@@ -2,6 +2,9 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import ProductInitializer from "@/components/home/ProductInitialiser";
+import { Toaster } from "sonner";
+
+
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -21,8 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-        <ProductInitializer/>
+        {/* <ProductInitializer/> */}
         {children}
+         <Toaster richColors position="top-right" />
         </body>
     </html>
   );

@@ -4,6 +4,8 @@ import { useState,FormEvent} from "react";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 
 export default function Page() {
   const router = useRouter();
@@ -36,13 +38,19 @@ export default function Page() {
       const data = await response.json();
 
       if (!response.ok) {
+        toast.error("Login failed.");
         setError(data.error || "Login failed");
         return;
       }
       console.log("Login Success:", data);
 
       // Redirect after login
-      router.push("/");
+       toast.success("Login Successfully");
+       setTimeout(()=>{
+              router.push("/");
+
+
+       },3000)
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");
@@ -70,7 +78,7 @@ export default function Page() {
             </h1>
 
             <p className="mt-2 text-sm text-gray-500">
-              Sign in to continue your heritage journey
+              Sign in to continue your Shree Priya's Community
             </p>
           </div>
 

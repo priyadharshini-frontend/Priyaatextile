@@ -1,26 +1,22 @@
-'use client';
+"use client";
 
-import { Grid3X3, List, SlidersHorizontal, Search } from 'lucide-react';
+import { Grid3X3, List, SlidersHorizontal, Search } from "lucide-react";
 
-type ViewMode = 'grid' | 'list';
+type ViewMode = "grid" | "list";
 
 type SortBy =
-  | 'featured'
-  | 'newest'
-  | 'price-low'
-  | 'price-high'
-  | 'popular'
-  | 'rating';
+  | "featured"
+  | "newest"
+  | "price-low"
+  | "price-high"
+
 
 interface ProductToolbarProps {
   productCount: number;
   search: string;
-  sortBy: SortBy;
-  viewMode: ViewMode;
-
+  sortBy: string;
   onSearchChange: (value: string) => void;
   onSortChange: (value: SortBy) => void;
-  onViewModeChange: (value: ViewMode) => void;
   onOpenFilter: () => void;
 }
 
@@ -28,29 +24,26 @@ export default function Toolbar({
   productCount,
   search,
   sortBy,
-  viewMode,
+
   onSearchChange,
   onSortChange,
-  onViewModeChange,
+
   onOpenFilter,
 }: ProductToolbarProps) {
+
   return (
     <div className="mb-8 rounded-3xl border border-[#eadfce] bg-white p-5 shadow-sm">
       {/* Top Section */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-
         {/* Left */}
         <div>
           <h1 className="text-3xl font-bold text-[#3d1f1f]">
             Explore Collections
           </h1>
-
-         
         </div>
 
         {/* Right */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-
           {/* Search */}
           <div className="relative">
             <Search
@@ -82,9 +75,12 @@ export default function Toolbar({
           {/* Sort */}
           <select
             value={sortBy}
-            onChange={(e) =>
-              onSortChange(e.target.value as SortBy)
-            }
+            onChange={(e) => {
+              console.log(e.target.value)
+              
+              
+              onSortChange(e.target.value as SortBy)}}
+            
             className="
               rounded-xl
               border border-gray-300
@@ -102,21 +98,14 @@ export default function Toolbar({
             <option value="newest">Newest</option>
             <option value="price-low">Price: Low → High</option>
             <option value="price-high">Price: High → Low</option>
-            <option value="popular">Popular</option>
-            <option value="rating">Top Rated</option>
+           
           </select>
 
           {/* View Toggle */}
           <div className="flex overflow-hidden rounded-xl border border-gray-300 p-2 bg-[#8b1e1e]">
-
-            <button
-              onClick={() => onViewModeChange('grid')}
-              className=" text-white"
-            >
+            <button className=" text-white">
               <Grid3X3 size={18} />
             </button>
-
-          
           </div>
 
           {/* Mobile Filter */}
@@ -138,7 +127,6 @@ export default function Toolbar({
             <SlidersHorizontal size={18} />
             Filters
           </button>
-
         </div>
       </div>
     </div>

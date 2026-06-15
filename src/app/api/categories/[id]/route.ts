@@ -39,11 +39,16 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
+     const slug = body.name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
 
     const updatedCategory = await db.category.update({
       where: { id },
       data: {
         name: body.name,
+        slug:slug
       },
     });
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import ProductCard from "../product/ProductCard";
 import { useProductStore } from "@/store/ProductStore";
 
-export const Collection = () => {
+export const Bestseller= () => {
   const products = useProductStore((state) => state.products);
 
   const features = products.filter((p) => p.isFeatured);
@@ -47,7 +47,7 @@ export const Collection = () => {
                 className="text-5xl md:text-6xl font-black leading-tight text-center"
                 style={{ color: "#3d1f1f" }}
               >
-                Our Exclusive 
+                Our Best Seller
                 <span
                   className="relative inline-block text-transparent bg-clip-text ms-2"
                   style={{

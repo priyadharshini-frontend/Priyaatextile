@@ -2,34 +2,35 @@
 const categories = [
   {
     id: 1,
-    name: "Women",
-    image: "https://placehold.co/150x150?text=Women",
+    name: "Sarees",
+    image: "images/category/saree.jpeg",
   },
   {
     id: 2,
-    name: "Men",
-    image: "https://placehold.co/150x150?text=Men",
+    name: "Women",
+    image: "images/category/women.jpeg",
   },
   {
     id: 3,
-    name: "Kids",
-    image: "https://placehold.co/150x150?text=Kids",
+    name: "Mens",
+    image: "images/category/men.jpeg",
   },
   {
     id: 4,
-    name: "Beauty",
-    image: "https://placehold.co/150x150?text=Beauty",
+    name: "Girls",
+    image: "images/category/girl.jpeg",
   },
   {
     id: 5,
-    name: "Footwear",
-    image: "https://placehold.co/150x150?text=Shoes",
+    name: "Boys",
+    image: "images/category/boy.jpeg",
   },
-  {
+   {
     id: 6,
-    name: "Accessories",
-    image: "https://placehold.co/150x150?text=Bags",
+    name: "Boys",
+    image: "images/category/boy.jpeg",
   },
+
 ];
 
 

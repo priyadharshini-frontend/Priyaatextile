@@ -417,7 +417,7 @@ export const Category = () => {
         </div>
 
         {/* Features Section */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { icon: '🎁', title: 'Exclusive Offers', desc: 'Up to 40% off on curated selections' },
             { icon: '📦', title: 'Free Shipping', desc: 'On all orders above ₹500' },
@@ -438,7 +438,7 @@ export const Category = () => {
               <p className="text-sm text-gray-600">{item.desc}</p>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Animations */}

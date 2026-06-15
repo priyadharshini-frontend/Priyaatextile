@@ -1,168 +1,90 @@
 import { ShoppingBag } from "lucide-react";
 import { Heart } from "lucide-react";
+import { Eye } from "lucide-react";
+import { Product } from "@/types/product";
+interface Props {
+  product: Product;
+}
 
-type ProductCardProps = {
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    images: string[];
-    category: {
-      id: string;
-      name: string;
-      slug: string;
-      created: string;
-    };
-  };
-  viewMode: 'grid' | 'list';
-};
-export default function ProductCard({
-  product,viewMode
-}: ProductCardProps) {
- console.log('ProductCard viewMode:', viewMode);
-
+export default function ProductCard({ product }: Props) {
   return (
-    // <div className="group bg-white rounded-xl overflow-hidden border hover:shadow-xl transition duration-300">
-    //   {/* Image */}
-    //   <div className="relative overflow-hidden">
-    //     <img
-    //       src={product.image}
-    //       alt={product.name}
-    //       className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition duration-300"
-    //     />
-
-    //     {/* Discount Badge */}
-    //     {discount && (
-    //       <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-    //         {discount}% OFF
-    //       </span>
-    //     )}
-
-    //     {/* Wishlist */}
-    //     <button className="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:scale-110 transition">
-    //       ♡
-    //     </button>
-    //   </div>
-
-    //   {/* Content */}
-    //   <div className="p-4">
-    //     {/* Category */}
-    //     <p className="text-sm text-gray-500">
-    //       {product.category}
-    //     </p>
-
-    //     {/* Name */}
-    //     <h3 className="font-medium mt-1 line-clamp-2">
-    //       {product.name}
-    //     </h3>
-
-    //     {/* Price */}
-    //     <div className="flex items-center gap-2 mt-3">
-    //       <span className="text-lg font-bold">
-    //         ₹{product.price}
-    //       </span>
-
-    //       {product.originalPrice && (
-    //         <span className="text-sm text-gray-400 line-through">
-    //           ₹{product.originalPrice}
-    //         </span>
-    //       )}
-    //     </div>
-
-    //     {/* Add to Cart */}
-    //     <button className="w-full mt-4 bg-red-800 text-white py-2 rounded-lg hover:bg-gray-800 transition">
-    //       Add to Cart
-    //     </button>
-    //   </div>
-    // </div>
-     <div className={`group bg-white  overflow-hidden border border-gray-100 hover:border-gray-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer ${viewMode === 'list' && 'flex '}`}>
-      {/* Image */}
-      <div className="relative w-full h-72 overflow-hidden bg-gray-50">
-        <img
-          src={product.images}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-        />
-
-        {/* Badge */}
-        {/* {discount ? (
-          <span className="absolute top-3 left-3 bg-red-500 text-white text-[11px] font-medium tracking-wide px-2.5 py-1 rounded-md">
-            {discount}% off
+    <div className="max-w-md overflow-hidden bg-white border border-stone-200 shadow-lg rounded-3xl hover:shadow-2xl transition-all duration-300">
+      {/* Image Section */}
+      <div className="relative">
+        <div className="absolute top-4 left-4 z-20">
+          {/* {product.isBestSeller && ( */}
+          <span className="px-4 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-[#7A1F3D] to-[#A52A4A]">
+            ⭐ BEST SELLER
           </span>
-        ) : product.isNew ? (
-          <span className="absolute top-3 left-3 bg-emerald-600 text-white text-[11px] font-medium tracking-wide px-2.5 py-1 rounded-md">
-            New
-          </span>
-        ) : null} */}
+        </div>
 
-        {/* Wishlist */}
-        <button
-         
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition"
-          aria-label="Add to wishlist"
-        >
-          <Heart
-            size={15}
-            className="fill-red-500 stroke-red-500"
-          />
+        <button className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center">
+          <Heart className="w-5 h-5 text-red-500" />
         </button>
+
+        <div className="relative  overflow-hidden">
+          <img
+            src="/images/saree.jpeg"
+            alt="{product.name}"
+            className="w-full h-full object-cover hover:scale-105 transition duration-500 cover"
+          />
+        </div>
       </div>
 
       {/* Content */}
-      <div className="px-4 pt-3.5 pb-4">
-        {/* Category */}
-        <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">
-          {/* {product.category.name} */}
-        </p>
+      <div className="p-4">
+        <h3 className=" text-xl font-serif text-gray-900">{product.name}</h3>
 
-        {/* Name */}
-        <h3 className="text-sm font-medium text-gray-900 leading-snug line-clamp-2 mb-2.5">
-          {product.name}
-        </h3>
+        <div className="flex items-center gap-4 mt-3">
+          <span className="text-2xl font-bold text-[#7A1F3D]">
+            ₹{product.salesPrice}
+          </span>
 
-        {/* Rating */}
-        {/* {product.rating && (
-          <div className="flex items-center gap-1.5 mb-3">
-            <div className="flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  size={12}
-                  className={
-                    i < Math.floor(product.rating!)
-                      ? "fill-amber-500 stroke-amber-500"
-                      : "stroke-gray-300"
-                  }
-                />
-              ))}
-            </div> */}
-            {/* {product.reviewCount && (
-              <span className="text-xs text-gray-400">({product.reviewCount})</span>
-            )}
-          </div>
-        )} */}
+          <span className="line-through text-gray-400 text-l ">   ₹{product.price}</span>
 
-        {/* Price */}
-        <div className="flex items-baseline gap-2 mb-3.5">
-          <span className="text-lg font-medium text-gray-900">₹{product.price}</span>
-          {/* {product.originalPrice && (
-            <span className="text-sm text-gray-400 line-through">
-              ₹{product.originalPrice.toLocaleString()}
-            </span>
-          )} */}
-          {/* {savings && (
-            <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
-              Save ₹{savings.toLocaleString()}
-            </span>
-          )} */}
+          <span className="p-1 text-sm font-semibold text-red-600 bg-red-50 rounded-xl">
+          
+          </span>
         </div>
 
-        {/* Add to Cart */}
-        <button className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-700 active:scale-[0.98] text-white text-[13px] font-medium tracking-wide py-2.5 rounded-xl transition-all duration-200">
-          <ShoppingBag size={15} />
-          Add to cart
-        </button>
+        {/* Buttons */}
+        <div className="grid grid-cols-2 gap-4 mt-3">
+          <button className="h-10 rounded-2xl font-semibold text-black bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] flex items-center justify-center gap-2 hover:scale-[1.02] transition">
+            <Eye size={20} />
+            View
+          </button>
+
+          <button className="h-10 rounded-2xl font-semibold text-white bg-gradient-to-r from-[#7A1F3D] to-[#A52A4A] flex items-center justify-center gap-2 hover:scale-[1.02] transition">
+            <ShoppingBag size={20} />
+            Cart
+          </button>
+        </div>
       </div>
+
+      {/* Footer */}
+      {/* <div className="grid grid-cols-4 gap-4 p-5 border-t bg-stone-50">
+
+        <div className="text-center">
+          <RotateCcw className="w-6 h-6 mx-auto text-[#7A1F3D]" />
+          <p className="mt-2 text-xs">Easy Returns</p>
+        </div>
+
+        <div className="text-center">
+          <Truck className="w-6 h-6 mx-auto text-[#7A1F3D]" />
+          <p className="mt-2 text-xs">Free Delivery</p>
+        </div>
+
+        <div className="text-center">
+          <Award className="w-6 h-6 mx-auto text-[#7A1F3D]" />
+          <p className="mt-2 text-xs">Authentic</p>
+        </div>
+
+        <div className="text-center">
+          <ShieldCheck className="w-6 h-6 mx-auto text-[#7A1F3D]" />
+          <p className="mt-2 text-xs">Secure Pay</p>
+        </div>
+
+      </div> */}
     </div>
   );
 }

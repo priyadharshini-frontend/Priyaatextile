@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
-import { randomUUID } from "crypto";
+import { registerSchema } from "@/schemas/auth.schema";
+
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+
+    const body=await req.json();
+    const validation=registerSchema.safeParse(body);
+    if(!validation.success){
+      return NextResponse.json({
+        message:validation.error.issues[0].message,
+      },{
+        status:400
+      })
+    }
+
+    const {name,email,password}=validation.data;
 
     const existingUser = await db.user.findUnique({
       where: { email },
@@ -22,7 +34,6 @@ export async function POST(req: NextRequest) {
 
     const user = await db.user.create({
       data: {
-        id: randomUUID(),
         name,
         email,
         password: hashedPassword,
@@ -31,12 +42,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "User created",
-        user: {
+        message: "User created Successfully",
+        User: {
     id: user.id,
     name: user.name,
     email: user.email,
-    status: user.status
+    
   }
       },
       { status: 201 }
@@ -51,4 +62,6 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+
+
 }

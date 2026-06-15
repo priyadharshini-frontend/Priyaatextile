@@ -10,6 +10,8 @@ export async function getCurrentUser() {
   const token = cookieStore.get("token")?.value;
 
   if (!token) return null;
+//   console.log(cookieStore.getAll());
+// console.log("TOKEN:", token);
 
   const decoded = verifyToken(token);
 

@@ -28,7 +28,7 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const { name, slug, categoryId } = body;
+    const { name, categoryId } = body;
 
     // 1. Check if subcategory exists
     const existing = await db.subCategory.findUnique({
@@ -41,7 +41,7 @@ export async function PUT(
         { status: 404 },
       );
     }
-
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
     // 2. Update subcategory
     const updated = await db.subCategory.update({
       where: { id },

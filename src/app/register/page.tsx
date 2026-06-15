@@ -4,6 +4,8 @@ import { useState,FormEvent } from "react";
 import { User, Mail, Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 
 export default function Page() {
   const router = useRouter();
@@ -37,7 +39,8 @@ export default function Page() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+
+        setError(data.message || "Registration failed");
         return;
       }
 
@@ -48,7 +51,14 @@ export default function Page() {
       console.log("Registration Success:", data);
 
       // Redirect
-      router.push("/");
+
+        toast.success("Account created successfully!");
+
+        setTimeout(()=>{
+                router.push("/login");
+
+
+        },1000)
     } catch (err) {
       console.error(err);
       setError("Something went wrong");
@@ -78,7 +88,7 @@ export default function Page() {
             </h1>
 
             <p className="mt-2 text-sm text-gray-500">
-              Join the heritage saree community
+              Join the Shree Priya's Community
             </p>
           </div>
 

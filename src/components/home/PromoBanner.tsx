@@ -4,7 +4,9 @@ export const PromoBanner = () => {
   return (
      <section className="bg-white py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[40px] bg-[#2b0d0d]">
+        <div className="relative overflow-hidden rounded-[40px] bg-cover bg-center"
+        style={{backgroundImage:"url('/images/banner/traditional.jpeg"}}
+        >
           <div className="absolute inset-0 bg-black/40"></div>
 
           <div className="grid items-center lg:grid-cols-2">

@@ -1,39 +1,33 @@
 import { create } from "zustand";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  images: string[];
-  isFeatured: boolean;
-  isBestSeller: boolean;
-  
-}
-
+import { Product } from "@/types/product";
 interface ProductStore {
   products: Product[];
   loading:boolean,
+  search:string, 
+  setSearch:(value:string)=>void;
 
-  fetchProducts: () => Promise<void>;
+  sort:string,
+  setSort:(sort:string)=>void;
+
+
+  setProducts: (products: Product[]) => void;
+  setLoading: (loading: boolean) => void;
+
+
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
   products: [],
   loading:false,
+  search:"",
 
-  fetchProducts: async () => {
-    try {
-      set({loading:true});
-      const res = await fetch("/api/products");
-      const data = await res.json();
+    sort: "featured", // ✅ initial value
+  setSort: (sort) => set({ sort }), // ✅ action
+  
+  setSearch:(value)=>set({search:value}),
+  setProducts: (products) => set({ products }),
+  setLoading: (loading) => set({ loading }),
+  
 
-      set({
-        products: data.data,
-        loading:false,
-      });
-    } catch (error) {
-      console.error("Failed to fetch products", error);
-      set({ loading: false });
-    }
-  },
+ 
 }));

@@ -7,59 +7,156 @@ datasource db {
   provider = "postgresql"
 }
 
-model user {
-  id        String   @id
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
   name      String?
   email     String   @unique
   password  String
-  createdAt DateTime @default(now())
+  role      Role     @default(USER)
   status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  carts   Cart[]
+  orders  Order[]
+  address Address[]
 }
 
 model Category {
-  id      String   @id @default(cuid())
-  name    String
-  slug    String   @unique
-  products   Product[] 
+  id            String        @id @default(cuid())
+  name          String
+  slug          String        @unique
+  products      Product[]
   subCategories SubCategory[]
-  created DateTime @default(now())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
+
 model SubCategory {
-  id          String     @id @default(cuid())
-  name        String
-  slug        String     @unique
-  categoryId  String
-  category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
 
-  products    Product[]
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
-  id             String       @id @default(cuid())
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
 
-  name           String
-  slug           String       @unique
-  description    String?
+  description String
 
-  price          Float
-  discount       Float        @default(0)
+  price      Float
+  salesPrice Float?
+  stock      Int    @default(0)
 
-  stock          Int          @default(0)
+  image      String
+  brand      String?
+  isFeatured Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  size       String[]
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
-  images         String[]
+  subCategoryId String?
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
 
-  isFeatured     Boolean      @default(false)
-  isBestSeller   Boolean      @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
 
-  categoryId     String
-  category       Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+model Cart {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  subCategoryId  String
-  subCategory    SubCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  items CartItem[]
+}
+
+model CartItem {
+  id     String @id @default(cuid())
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  totalAmount Float
+  status      OrderStatus @default(PENDING)
+
+  razorpayOrderId String?
+  paymentId       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Int
+
+  price Float
+}
+
+model Address {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  fullname String
+  phone    String
+
+  addressLine1 String
+  addressLine2 String?
+
+  city    String
+  state   String
+  country String
+
+  postalCode String
+  isDefalut  Boolean @default(false)
+
+  created   DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

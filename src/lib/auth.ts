@@ -14,9 +14,11 @@ export async function comparePassword(
   return bcrypt.compare(password, hashedPassword);
 }
 
-export function generateToken(userId: string) {
+export function generateToken(userId: string,role:string) {
   return jwt.sign(
-    { userId },
+    { userId ,
+      role
+    },
     JWT_SECRET,
     { expiresIn: "30d" }
   );

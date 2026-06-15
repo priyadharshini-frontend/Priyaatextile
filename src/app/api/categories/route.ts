@@ -62,7 +62,7 @@ export async function GET() {
                 subCategories:true,
             },
            orderBy: {
-              created: "desc"
+              createdAt: "desc"
 }
         })
         return NextResponse.json({
