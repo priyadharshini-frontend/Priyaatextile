@@ -1,17 +1,20 @@
-type ProductGalleryProps = {
-  images: string[];
+type Props = {
+  product: any;
 };
 
-
-export default function ProductGallery({ images }: ProductGalleryProps) {
+export default function ProductGallery({ product }: Props) {
   return (
-    <div className="space-y-4">
-      <div className="relative h-[500px] overflow-hidden rounded-2xl">
-        <img
-          src={images?.[0]}
-          className="w-full h-full object-cover"
-          alt="product"
+    <div>
+      <div className="rounded-2xl overflow-hidden border">
+        <div className="w-full h-[500px]">
+           <img
+         src="/images/saree.jpeg"
+            alt="{product.name}"
+          className="w-full h-full object-contain"
         />
+
+        </div>
+       
       </div>
     </div>
   );

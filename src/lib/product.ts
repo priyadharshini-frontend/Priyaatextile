@@ -8,3 +8,10 @@ export async function getProductBySlug(slug: string) {
 
   return product;
 }
+export async function getProductById(id: string) {
+  return prisma.product.findUnique({
+    where: {
+      id,
+    },
+  });
+}

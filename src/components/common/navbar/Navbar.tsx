@@ -12,6 +12,8 @@ import {
   UserIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import { getCartCount } from '@/services/cart.service';
+import { useEffect } from 'react';
 
 const navigation = [
   {
@@ -114,6 +116,19 @@ export default function Navbar({user}:NavbarProps) {
   const handleLeave = () => {
     timeoutRef.current = setTimeout(() => setActiveMenu(null), 180);
   };
+
+
+  const [cartCount, setCartCount] = useState(0);
+
+useEffect(() => {
+  loadCount();
+}, []);
+
+const loadCount = async () => {
+  const response = await getCartCount();
+
+  setCartCount(response.count);
+};
 
   return (
     <>
@@ -461,7 +476,7 @@ export default function Navbar({user}:NavbarProps) {
 
               <Link href="/cart" className="nb-icon-btn" style={{ position: 'relative' }}>
                 <ShoppingBagIcon style={{ width: 20, height: 20 }} />
-                <span style={{
+                {/* <span style={{
                   position: 'absolute',
                   top: 0,
                   right: 0,
@@ -478,7 +493,12 @@ export default function Navbar({user}:NavbarProps) {
                   lineHeight: 1,
                 }}>
                   0
-                </span>
+                </span> */}
+                 {cartCount > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+      {cartCount}
+    </span>
+  )}
               </Link>
 
               {user ? (

@@ -1,90 +1,103 @@
-import { ShoppingBag } from "lucide-react";
+"use client";
 import { Heart } from "lucide-react";
-import { Eye } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Product } from "@/types/product";
+import Link from "next/link";
+import { useState } from "react";
+import { addToCart } from "@/services/cart.service";
+import { useRouter } from "next/navigation";
+
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
+  const router = useRouter();
+  const [qty, setQty] = useState(1);
+  const handleAddToCart = async () => {
+  try {
+    await addToCart(product.id);
+
+    router.push("/cart");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   return (
-    <div className="max-w-md overflow-hidden bg-white border border-stone-200 shadow-lg rounded-3xl hover:shadow-2xl transition-all duration-300">
-      {/* Image Section */}
-      <div className="relative">
-        <div className="absolute top-4 left-4 z-20">
-          {/* {product.isBestSeller && ( */}
-          <span className="px-4 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-[#7A1F3D] to-[#A52A4A]">
-            ⭐ BEST SELLER
-          </span>
-        </div>
+    <Link href={`/product/${product.id}`}>
+      <div className="group max-w-sm overflow-hidden bg-white   hover:shadow-xl transition-all duration-300">
 
-        <button className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center">
-          <Heart className="w-5 h-5 text-red-500" />
-        </button>
+        {/* Image Section */}
+        <div className="relative overflow-hidden">
 
-        <div className="relative  overflow-hidden">
+          {/* Wishlist */}
+          <button
+            onClick={(e) => e.preventDefault()}
+            className="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
+          >
+            <Heart className="w-5 h-5 text-red-400 fill-red-400" />
+          </button>
+
+          {/* Product Image */}
           <img
             src="/images/saree.jpeg"
-            alt="{product.name}"
-            className="w-full h-full object-cover hover:scale-105 transition duration-500 cover"
+            alt={product.name}
+            className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-500"
           />
+
+          {/* Hover Overlay — Add to Cart bar */}
+          <div
+            className="absolute bottom-0 left-0 right-0 z-10
+              translate-y-full group-hover:translate-y-0
+              transition-transform duration-300 ease-in-out
+              flex items-center gap-2 px-3 py-3 bg-transparent backdrop-blur-sm"
+            onClick={(e) => e.preventDefault()}
+          >
+            {/* Quantity */}
+            <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden h-10">
+              <span className="px-3 text-sm font-medium text-white select-none">
+                {qty}
+              </span>
+              <div className="flex flex-col border-l border-stone-300">
+                <button
+                  onClick={(e) => { e.preventDefault(); setQty((q) => q + 1); }}
+                  className="px-2 py-[2px] text-gray-500 hover:bg-stone-100 text-xs leading-none"
+                >
+                  ▲
+                </button>
+                <button
+                  onClick={(e) => { e.preventDefault(); setQty((q) => Math.max(1, q - 1)); }}
+                  className="px-2 py-[2px] text-gray-500 hover:bg-stone-100 text-xs leading-none border-t border-stone-300"
+                >
+                  ▼
+                </button>
+              </div>
+            </div>
+
+            {/* Add to Cart */}
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 h-10 rounded-lg bg-gradient-to-r from-[#7A1F3D] to-[#A52A4A] hover:bg-[#43A047] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors duration-200"
+            >
+              <ShoppingBag size={16} />
+              Add to cart
+            </button>
+          </div>
         </div>
+
+        {/* Content */}
+        <div className="px-4 py-3 text-center">
+          <h3 className="text-base font-medium text-gray-800">{product.name}</h3>
+          <p className="text-gray-500 line-through mt-1">
+            Rs.{product.price}
+          </p>
+          <p className="text-[#E91E63] font-bold ">
+            Rs.{product.salesPrice}
+          </p>
+        </div>
+
       </div>
-
-      {/* Content */}
-      <div className="p-4">
-        <h3 className=" text-xl font-serif text-gray-900">{product.name}</h3>
-
-        <div className="flex items-center gap-4 mt-3">
-          <span className="text-2xl font-bold text-[#7A1F3D]">
-            ₹{product.salesPrice}
-          </span>
-
-          <span className="line-through text-gray-400 text-l ">   ₹{product.price}</span>
-
-          <span className="p-1 text-sm font-semibold text-red-600 bg-red-50 rounded-xl">
-          
-          </span>
-        </div>
-
-        {/* Buttons */}
-        <div className="grid grid-cols-2 gap-4 mt-3">
-          <button className="h-10 rounded-2xl font-semibold text-black bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] flex items-center justify-center gap-2 hover:scale-[1.02] transition">
-            <Eye size={20} />
-            View
-          </button>
-
-          <button className="h-10 rounded-2xl font-semibold text-white bg-gradient-to-r from-[#7A1F3D] to-[#A52A4A] flex items-center justify-center gap-2 hover:scale-[1.02] transition">
-            <ShoppingBag size={20} />
-            Cart
-          </button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      {/* <div className="grid grid-cols-4 gap-4 p-5 border-t bg-stone-50">
-
-        <div className="text-center">
-          <RotateCcw className="w-6 h-6 mx-auto text-[#7A1F3D]" />
-          <p className="mt-2 text-xs">Easy Returns</p>
-        </div>
-
-        <div className="text-center">
-          <Truck className="w-6 h-6 mx-auto text-[#7A1F3D]" />
-          <p className="mt-2 text-xs">Free Delivery</p>
-        </div>
-
-        <div className="text-center">
-          <Award className="w-6 h-6 mx-auto text-[#7A1F3D]" />
-          <p className="mt-2 text-xs">Authentic</p>
-        </div>
-
-        <div className="text-center">
-          <ShieldCheck className="w-6 h-6 mx-auto text-[#7A1F3D]" />
-          <p className="mt-2 text-xs">Secure Pay</p>
-        </div>
-
-      </div> */}
-    </div>
+    </Link>
   );
 }

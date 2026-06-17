@@ -1,32 +1,46 @@
 import Link from "next/link";
-import ProductGallery from "@/components/product/ProductGallery";
-import ProductInfo from "@/components/product/ProductInfo";
 import Navbar from "@/components/common/navbar/Navbar";
 import { getCurrentUser } from "@/lib/curentUser";
+import { getProductById } from "@/lib/product";
+import ProductGallery from "@/components/product/ProductGallery";
+import ProductInfo from "@/components/product/ProductInfo";
+import RelatedProducts from "@/components/product/RelatedProducts";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
+  
+  const { id } = await params;
+   const users = await getCurrentUser();
 
-  const user =await getCurrentUser()
+const product = await getProductById(id);
 
-  console.log(params.id);
-
+if (!product) {
   return (
-    <>
-     <Navbar user={user} />
-    
-    <section className="bg-[#faf7f2] py-20">
-      <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:px-8">
-        <ProductGallery />
-        <ProductInfo />
+    <div>
+      <h1>Product Not Found</h1>
+      <p>ID: {id}</p>
+    </div>
+  );
+}
+  return (
+   <div className="container mx-auto px-4 py-10">
+    <Navbar user={users}/>
+
+      <div className="grid lg:grid-cols-2 gap-12 mt-23">
+
+        <ProductGallery product={product} />
+
+        <ProductInfo product={product} />
+
       </div>
-    </section>
-    </>
- 
+
+      <RelatedProducts />
+
+    </div>
   );
 }

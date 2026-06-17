@@ -48,4 +48,22 @@ if (sort) {
 //     });
 //     return res.json();
 //   },
+async getById(id: string) {
+    const res = await fetch(`/api/products/${id}`);
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+
+      const error = await res.json().catch(() => ({}));
+
+      throw new Error(
+        error.message || "Failed to fetch product"
+      );
+    }
+
+    return res.json();
+  },
+
 };
