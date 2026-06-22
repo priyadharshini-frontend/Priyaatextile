@@ -49,7 +49,7 @@ export default function ProductInfo({ product }: Props) {
 
       <ProductQuantity />
 
-      <ProductActions />
+      <ProductActions productId={product.id}  />
 
     </div>
   );

@@ -10,9 +10,6 @@ export default function Logoutbutton() {
       method: "POST",
     });
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
     router.push("/login");
     router.refresh();
   };

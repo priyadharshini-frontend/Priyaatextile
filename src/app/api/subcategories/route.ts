@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 4. Success response
+    // 4. Success response`
     return NextResponse.json(
       {
         success: true,

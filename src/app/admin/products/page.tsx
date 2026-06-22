@@ -192,7 +192,7 @@ export default function ProductsPage() {
                       <div>
                         <img
                           src={
-                            p.images?.length > 0
+                            p.image?.length > 0
                               ? p.images[0]
                               : "https://placehold.co/60x60"
                           }
