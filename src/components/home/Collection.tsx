@@ -3,8 +3,11 @@
 import { useState } from "react";
 import ProductCard from "../product/ProductCard";
 import { useProductStore } from "@/store/ProductStore";
+import { useEffect } from "react";
+import { useProducts } from "@/hooks/useProducts";
 
 export const Collection = () => {
+   useProducts();
   const products = useProductStore((state) => state.products);
 
   const features = products.filter((p) => p.isFeatured);

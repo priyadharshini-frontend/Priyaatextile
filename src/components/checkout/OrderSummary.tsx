@@ -52,23 +52,6 @@ export default function OrderSummary({ items }: Props) {
         ))}
       </div>
 
-      {/* Coupon */}
-      <div className="flex gap-2 mt-4">
-        <input
-          type="text"
-          value={coupon}
-          onChange={(e) => setCoupon(e.target.value)}
-          placeholder="Coupon code"
-          className="flex-1 h-9 rounded-xl border border-stone-200 text-sm px-3 outline-none focus:border-[#7A1F3D] focus:ring-2 focus:ring-[#7A1F3D]/10 placeholder:text-gray-300 transition"
-        />
-        <button
-          onClick={applyCoupon}
-          className="h-9 px-4 rounded-xl border border-[#7A1F3D] text-[#7A1F3D] text-sm font-medium hover:bg-rose-50 transition"
-        >
-          Apply
-        </button>
-      </div>
-
       {/* Totals */}
       <div className="flex flex-col gap-2.5 mt-5">
         <div className="flex justify-between text-sm text-gray-500">

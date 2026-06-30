@@ -41,7 +41,7 @@ export default function ProductCard({ product }: Props) {
 
           {/* Product Image */}
           <img
-            src="/images/saree.jpeg"
+            src={product.image}
             alt={product.name}
             className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-500"
           />

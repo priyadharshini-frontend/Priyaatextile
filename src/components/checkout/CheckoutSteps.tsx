@@ -13,7 +13,7 @@ export default function CheckoutSteps({ currentStep }: Props) {
         const isDone = num < currentStep;
 
         return (
-          <div key={step} className="flex items-center">
+          <div key={step} className="flex items-center content-center">
             <div className="flex items-center gap-2">
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold

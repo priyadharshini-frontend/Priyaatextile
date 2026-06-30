@@ -13,19 +13,20 @@ export default function ProductsPage() {
 
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    discount: "",
-    categoryId: "",
-    stock: "",
-    subCategoryId: "",
-    description: "",
-    images: [] as string[],
-    isFeatured: false,
-    isBestSeller: false,
-  });
+  name: "",
+  price: "",
+  salesPrice: "",
+  categoryId: "",
+  stock: "",
+  subCategoryId: "",
+  description: "",
+  image: "",
+  brand: "",
+  size: [] as string[],
+  isFeatured: false,
+  isActive: true,
+});
 
   const fetchproduct = async () => {
     const res = await fetch("/api/products");
@@ -107,18 +108,19 @@ export default function ProductsPage() {
     setSelectedId(p.id);
 
     setProduct({
-      name: p.name,
-      price: p.price,
-      discount: p.discount,
-      stock: p.stock,
-      categoryId: p.categoryId,
-      subCategoryId: p.subCategoryId,
-      description: p.description,
-      images: p.images || [],
-      isFeatured: p.isFeautured,
-      isBestSeller: p.isBestSeller,
-    });
-
+  name: p.name,
+  price: p.price.toString(),
+  salesPrice: p.salesPrice?.toString() || "",
+  stock: p.stock.toString(),
+  categoryId: p.categoryId,
+  subCategoryId: p.subCategoryId || "",
+  description: p.description,
+  image: p.image || "",
+  brand: p.brand || "",
+  size: p.size || [],
+  isFeatured: p.isFeatured,
+  isActive: p.isActive,
+});
     setShowModal(true);
   };
   const openDeleteModal = async (pr: any) => {
@@ -193,7 +195,7 @@ export default function ProductsPage() {
                         <img
                           src={
                             p.image?.length > 0
-                              ? p.images[0]
+                              ? p.image
                               : "https://placehold.co/60x60"
                           }
                           alt={p.name}
@@ -439,9 +441,12 @@ export default function ProductsPage() {
 
                 setProduct((prev) => ({
                   ...prev,
-                  images: [...prev.images, url],
+                  image:url,
                 }));
-              }}
+              }
+            
+            
+            }
             >
               {({ open }) => (
                 <button
@@ -453,19 +458,17 @@ export default function ProductsPage() {
               )}
             </CldUploadWidget>
 
-            <div className="flex gap-2 mt-3 flex-wrap">
-              {product.images.length > 0 ? (
-                product.images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    className="w-20 h-20 object-cover rounded border"
-                  />
-                ))
-              ) : (
-                <p className="text-sm text-gray-400">No images uploaded</p>
-              )}
-            </div>
+          <div className="flex gap-2 mt-3 flex-wrap">
+  {product.image ? (
+    <img
+      src={product.image}
+      className="w-20 h-20 object-cover rounded border"
+      alt="Product"
+    />
+  ) : (
+    <p className="text-sm text-gray-400">No image uploaded</p>
+  )}
+</div>
 
             {/* Footer */}
             <div className="flex justify-end gap-3 mt-6">

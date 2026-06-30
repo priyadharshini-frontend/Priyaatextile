@@ -16,10 +16,6 @@ import { Bestseller } from "@/components/home/Bestseller";
 export default async function Home() {
   const users = await getCurrentUser();
 
-
-
-
-
   return (
     <>
       <Navbar user={users} />
