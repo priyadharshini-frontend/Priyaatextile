@@ -17,15 +17,17 @@ export default function CartItemCard({
 }: CartItemCardProps) {
   const itemTotal = item.price * item.quantity;
 
-  const itemSaved =
-    (item.originalPrice - item.price) *
-    item.quantity;
+ const itemSaved =
+  ((item.originalPrice ?? item.price) - item.price) *
+  item.quantity;
 
   return (
     <div className="group p-6 bg-white rounded-2xl border border-[#eadfce] overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(139,30,30,0.1)] transition-all duration-300">
       <div className="flex gap-6">
         <div className="w-32 h-32 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex-shrink-0 flex items-center justify-center text-gray-400 text-sm">
-          Product Image
+
+          <img src={item.image} alt="" />
+         
         </div>
 
         <div className="flex-1 min-w-0">
@@ -35,15 +37,7 @@ export default function CartItemCard({
                 {item.name}
               </h3>
 
-              <div className="flex gap-2 flex-wrap text-xs">
-                <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">
-                  Color: {item.color}
-                </span>
-
-                <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">
-                  {item.size}
-                </span>
-              </div>
+             
             </div>
 
             <button
@@ -61,18 +55,18 @@ export default function CartItemCard({
                   ₹{itemTotal.toLocaleString("en-IN")}
                 </p>
 
-                <p className="text-sm text-gray-400 line-through">
+                {/* <p className="text-sm text-gray-400 line-through">
                   ₹{(
-                    item.originalPrice *
+                    item.*
                     item.quantity
                   ).toLocaleString("en-IN")}
-                </p>
+                </p> */}
               </div>
 
-              <p className="text-xs text-green-500 font-semibold">
+              {/* <p className="text-xs text-green-500 font-semibold">
                 Save ₹
-                {itemSaved.toLocaleString("en-IN")}
-              </p>
+                {item.}
+              </p> */}
             </div>
 
             <div className="flex items-center gap-2 bg-[#f9f6f2] rounded-lg p-1">

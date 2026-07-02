@@ -6,62 +6,43 @@ import { useProductStore } from "@/store/ProductStore";
 
 export const Bestseller= () => {
   const products = useProductStore((state) => state.products);
+  console.log(products)
 
-  const features = products.filter((p) => p.isFeatured);
+  const features = products.filter((p) => p.isBestSeller);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <section
       className="relative py-10 overflow-hidden"
-      style={{ backgroundColor: "#faf7f2" }}
     >
-      {/* Decorative Background Elements */}
-      <div
-        className="absolute top-0 right-0 w-96 h-96 opacity-3 rounded-full"
-        style={{ backgroundColor: "#8b1e1e" }}
-      ></div>
-      <div
-        className="absolute bottom-0 left-0 w-72 h-72 opacity-2 rounded-full"
-        style={{ backgroundColor: "#d4af37" }}
-      ></div>
-
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         {/* Header Section */}
         <div className="mb-16">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
             {/* Left Content */}
             <div className="space-y-4 flex-1">
-              {/* Badge */}
-              <div className="text-center">
-                <span
-                  className="px-4 py-2 rounded-full text-sm font-bold text-white"
-                  style={{ backgroundColor: "#8b1e1e" }}
-                >
-                  ✨ Curated For You
-                </span>
-              </div>
+                <div className="flex flex-col items-center">
+                <div className="w-30 ">
+                  <img src="/design.webp" alt="" className="w-full" />
+                </div>
 
-              {/* Title with gradient */}
-              <h2
-                className="text-5xl md:text-6xl font-black leading-tight text-center"
-                style={{ color: "#3d1f1f" }}
-              >
-                Our Best Seller
-                <span
-                  className="relative inline-block text-transparent bg-clip-text ms-2"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, #8b1e1e 0%, #d4af37 100%)",
-                  }}
+                <h2
+                  className="text-4xl font-bold text-center"
+                  style={{ color: "#3d1f1f" }}
                 >
-                  Collection
-                </span>
-              </h2>
+                  Best Seller
+                </h2>
+                <div className="w-30 ">
+                  <img src="/design.webp" alt="" className="w-full" />
+                </div>
+              </div>
+             
+             
             </div>
           </div>
         </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 grid-cols-2 lg:grid-cols-4">
           {features.map((product, index) => (
             <div
               key={product.id}

@@ -1,10 +1,11 @@
 export interface CartItem {
-  id: number;
+  id: string;
   name: string;
-  price: number;
-  originalPrice: number;
-  quantity: number;
   image: string;
-  color: string;
-  size: string;
+  price: number;
+  quantity: number;
+
+  originalPrice?: number;
+  color?: string;
+  size?: string;
 }

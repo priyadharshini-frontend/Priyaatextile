@@ -66,7 +66,7 @@ const handleSearchChange = (value: string) => {
       />
 
       <div className="max-w-10xl mx-auto px-4 flex gap-6">
-        <Filter/>
+        {/* <Filter/> */}
 
         {loading ? <ProductGridSkeleton /> : <ProductGrid />}
       </div>

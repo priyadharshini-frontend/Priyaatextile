@@ -7,7 +7,7 @@ import EmptyCart from "@/components/cart/EmptyCart";
 import OrderSummary from "@/components/cart/OrderSummary";
 import { getCart } from "@/services/cart.service";
 
-const TAX_RATE = 0.18;
+// const TAX_RATE = 0.18;
 const SHIPPING_FEE = 100;
 const FREE_SHIPPING_THRESHOLD = 1000;
 
@@ -45,14 +45,14 @@ export default function Cart() {
     0
   );
 
-  const tax = Math.round(subtotal * TAX_RATE);
+  // const tax = Math.round(subtotal * TAX_RATE);
 
   const shipping =
     subtotal > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
 
   const discount = appliedPromo ? Math.round(subtotal * 0.1) : 0;
 
-  const total = subtotal + tax + shipping - discount;
+  const total = subtotal + shipping - discount;
 
   const handleQuantityChange = async (
     cartItemId: string,
@@ -146,6 +146,9 @@ export default function Cart() {
                     item.product?.salesPrice ||
                     item.product?.price,
                   quantity: item.quantity,
+                  originalPrice: item.product?.price || item.product?.salesPrice || 0,
+                    color: "",
+                  size: "",
                 }}
                 onQuantityChange={(qty: number) =>
                   handleQuantityChange(item.id, qty)
@@ -165,7 +168,7 @@ export default function Cart() {
 
           <OrderSummary
             subtotal={subtotal}
-            tax={tax}
+           
             shipping={shipping}
             discount={discount}
             total={total}

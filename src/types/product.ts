@@ -1,4 +1,5 @@
 export interface Product{
+    isBestSeller:boolean;
     id:string;
     name:string;
     slug:string;
@@ -9,5 +10,6 @@ export interface Product{
     image:string;
     brand:string;
     isFeatured:boolean;
-    isActive:boolean
+    isActive:boolean;
+    
 }

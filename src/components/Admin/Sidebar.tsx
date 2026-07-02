@@ -8,10 +8,11 @@ export default function Sidebar() {
 
   const menu = [
     { name: "Dashboard", href: "/admin" },
+    { name: "Banner", href: "/admin/banner" },
     { name: "Products", href: "/admin/products" },
     { name: "Categories", href: "/admin/categories" },
     { name: "Orders", href: "/admin/orders" },
-    { name: "Users", href: "/admin/users" },
+    { name: "Reels", href: "/admin/reels" },
   ];
 
   return (

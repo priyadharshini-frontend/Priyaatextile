@@ -160,10 +160,26 @@ exports.Prisma.ProductScalarFieldEnum = {
   image: 'image',
   brand: 'brand',
   isFeatured: 'isFeatured',
+  isBestSeller: 'isBestSeller',
+  isArrival: 'isArrival',
   isActive: 'isActive',
-  size: 'size',
   categoryId: 'categoryId',
   subCategoryId: 'subCategoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  size: 'size'
+};
+
+exports.Prisma.HeroScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  description: 'description',
+  desktopImage: 'desktopImage',
+  mobileImage: 'mobileImage',
+  buttonText: 'buttonText',
+  buttonLink: 'buttonLink',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -190,6 +206,14 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   razorpayOrderId: 'razorpayOrderId',
   paymentId: 'paymentId',
+  shippingName: 'shippingName',
+  shippingPhone: 'shippingPhone',
+  shippingAddressLine1: 'shippingAddressLine1',
+  shippingAddressLine2: 'shippingAddressLine2',
+  shippingCity: 'shippingCity',
+  shippingState: 'shippingState',
+  shippingPostalCode: 'shippingPostalCode',
+  shippingCountry: 'shippingCountry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -202,19 +226,14 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   price: 'price'
 };
 
-exports.Prisma.AddressScalarFieldEnum = {
+exports.Prisma.ReelScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  fullname: 'fullname',
-  phone: 'phone',
-  addressLine1: 'addressLine1',
-  addressLine2: 'addressLine2',
-  city: 'city',
-  state: 'state',
-  country: 'country',
-  postalCode: 'postalCode',
-  isDefalut: 'isDefalut',
-  created: 'created',
+  title: 'title',
+  caption: 'caption',
+  instagramUrl: 'instagramUrl',
+  thumbnail: 'thumbnail',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -250,11 +269,12 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   SubCategory: 'SubCategory',
   Product: 'Product',
+  Hero: 'Hero',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
   OrderItem: 'OrderItem',
-  Address: 'Address'
+  Reel: 'Reel'
 };
 
 /**

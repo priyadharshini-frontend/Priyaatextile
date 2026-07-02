@@ -8,7 +8,7 @@ export default function ProductGallery({ product }: Props) {
       <div className="rounded-2xl overflow-hidden border">
         <div className="w-full h-[500px]">
            <img
-         src="/images/saree.jpeg"
+         src={product?.image}
             alt="{product.name}"
           className="w-full h-full object-contain"
         />

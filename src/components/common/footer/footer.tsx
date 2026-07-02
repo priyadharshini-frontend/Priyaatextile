@@ -6,25 +6,19 @@ import {
 } from '@heroicons/react/24/outline';
 
 const footerLinks = {
-  Shop: [
-    { name: 'New Arrivals', href: '/products' },
-    { name: 'Wedding Collection', href: '/products' },
-    { name: 'Silk Sarees', href: '/products' },
-    { name: 'Festive Collection', href: '/products' },
+  More: [
+    { name: 'About us', href: '/products' },
+    { name: 'store Location', href: '/products' },
+    { name: 'contact', href: '/products' },
+    { name: 'How to order', href: '/products' },
   ],
 
-  Company: [
-    { name: 'About Us', href: '/about' },
-    { name: 'Our Story', href: '/story' },
-    { name: 'Craftsmanship', href: '/craftsmanship' },
-    { name: 'Contact', href: '/contact' },
-  ],
-
-  Support: [
-    { name: 'Shipping Policy', href: '/shipping' },
-    { name: 'Returns & Refunds', href: '/returns' },
-    { name: 'FAQs', href: '/faq' },
-    { name: 'Privacy Policy', href: '/privacy' },
+  Links: [
+    { name: 'Privacy Policy', href: '/about' },
+    { name: 'Returns', href: '/story' },
+    { name: 'Shipping Policy', href: '/craftsmanship' },
+    { name: 'Pricing', href: '/contact' },
+     { name: 'Terms and Conditions', href: '/contact' },
   ],
 };
 export default function Footer() {
@@ -40,14 +34,14 @@ export default function Footer() {
         
         {/* Brand */}
         <div>
-          <h2 className="text-3xl font-bold text-[#d4af37]">
-            Heritage
+          {/* <h2 className="text-3xl font-bold text-[#d4af37]">
+           
           </h2>
 
           <p className="mt-6 leading-8 text-gray-300">
             Discover timeless handcrafted sarees woven with
             elegance, culture, and tradition.
-          </p>
+          </p> */}
 
           {/* Contact */}
           <div className="mt-8 space-y-4">

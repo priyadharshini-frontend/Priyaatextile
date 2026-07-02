@@ -17,12 +17,12 @@ export default function ProductInfo({ product }: Props) {
       <div className="flex items-center gap-3">
 
         <span className="text-3xl font-semibold">
-          ₹{product.price}
+          ₹{product.salesPrice}
         </span>
 
         {product.salesPrice && (
           <span className="line-through text-gray-400">
-            ₹{product.salesPrice}
+            ₹{product.price}
           </span>
         )}
 
@@ -45,7 +45,7 @@ export default function ProductInfo({ product }: Props) {
 
       </div>
 
-      <ProductSizeSelector sizes={product.size} />
+      {/* <ProductSizeSelector sizes={product.size} /> */}
 
       <ProductQuantity />
 

@@ -15,6 +15,8 @@ export async function PUT(request:NextRequest,{params}:{params:Promise<{id:strin
       image,
       brand,
       isFeatured,
+       isBestSeller,
+      isArrival,
       isActive,
       size,
       categoryId,
@@ -81,6 +83,8 @@ export async function PUT(request:NextRequest,{params}:{params:Promise<{id:strin
         image,
         brand,
         isFeatured: Boolean(isFeatured),
+        isBestSeller: Boolean(isBestSeller),
+        isArrival: Boolean(isArrival),
         isActive: Boolean(isActive),
         size,
         categoryId,
@@ -133,6 +137,7 @@ export async function DELETE(request:NextRequest,{ params }: { params: Promise<{
 
   try {
     const { id } = await params;
+    console.log("DELETE ID:", id);
 
     const existingProduct = await db.product.findUnique({
       where: { id },
@@ -172,5 +177,49 @@ export async function DELETE(request:NextRequest,{ params }: { params: Promise<{
     );
   }
 
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    const product = await db.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Product not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Internal Server Error",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }
   

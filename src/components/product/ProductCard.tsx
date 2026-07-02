@@ -26,7 +26,7 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <Link href={`/product/${product.id}`}>
-      <div className="group max-w-sm overflow-hidden bg-white   hover:shadow-xl transition-all duration-300">
+      <div className="group max-w-sm overflow-hidden bg-white   hover: transition-all duration-300">
 
         {/* Image Section */}
         <div className="relative overflow-hidden">

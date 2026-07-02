@@ -7,18 +7,41 @@ export async function POST(req: NextRequest) {
 
     const { amount } = body;
 
+    // Validation
+    if (!amount || amount <= 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid amount",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Convert Rupees → Paise
+    const amountInPaise = Math.round(amount * 100);
+
+    // Create Razorpay Order
     const order = await razorpay.orders.create({
-      amount: amount * 100,
+      amount: amountInPaise,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     });
 
-    return NextResponse.json(order);
-  } catch (error) {
-    console.log(error);
+    return NextResponse.json({
+      success: true,
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    });
+  } catch (error: any) {
+    console.error("CREATE ORDER ERROR:", error);
 
     return NextResponse.json(
-      { error: "Failed to create order" },
+      {
+        success: false,
+        message: error.message || "Failed to create Razorpay order",
+      },
       { status: 500 }
     );
   }

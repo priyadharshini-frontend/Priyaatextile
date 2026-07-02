@@ -14,19 +14,21 @@ export default function ProductsPage() {
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [product, setProduct] = useState({
-  name: "",
-  price: "",
-  salesPrice: "",
-  categoryId: "",
-  stock: "",
-  subCategoryId: "",
-  description: "",
-  image: "",
-  brand: "",
-  size: [] as string[],
-  isFeatured: false,
-  isActive: true,
-});
+    name: "",
+    price: "",
+    salesPrice: "",
+    categoryId: "",
+    stock: "",
+    subCategoryId: "",
+    description: "",
+    image: "",
+    brand: "",
+    size: [],
+    isFeatured: false,
+    isBestSeller: false,
+    isArrival: false,
+    isActive: true,
+  });
 
   const fetchproduct = async () => {
     const res = await fetch("/api/products");
@@ -86,14 +88,20 @@ export default function ProductsPage() {
 
       // reset form
       setProduct({
-        name: "",
-        price: "",
-        discount: "",
-        categoryId: "",
-        subCategoryId: "",
-        description: "",
-        stock: "",
-        images: [],
+         name: "",
+  price: "",
+  salesPrice: "",
+  categoryId: "",
+  stock: "",
+  subCategoryId: "",
+  description: "",
+  image: "",
+  brand: "",
+  size: [],
+  isFeatured: false,
+  isBestSeller: false,
+  isArrival: false,
+  isActive: true,
       });
 
       setShowModal(false);
@@ -108,19 +116,21 @@ export default function ProductsPage() {
     setSelectedId(p.id);
 
     setProduct({
-  name: p.name,
-  price: p.price.toString(),
-  salesPrice: p.salesPrice?.toString() || "",
-  stock: p.stock.toString(),
-  categoryId: p.categoryId,
-  subCategoryId: p.subCategoryId || "",
-  description: p.description,
-  image: p.image || "",
-  brand: p.brand || "",
-  size: p.size || [],
-  isFeatured: p.isFeatured,
-  isActive: p.isActive,
-});
+      name: p.name,
+      price: p.price.toString(),
+      salesPrice: p.salesPrice?.toString() || "",
+      stock: p.stock.toString(),
+      categoryId: p.categoryId,
+      subCategoryId: p.subCategoryId || "",
+      description: p.description,
+      image: p.image || "",
+      brand: p.brand || "",
+      size: p.size || [],
+      isFeatured: p.isFeatured,
+      isBestSeller: p.isBestSeller,
+      isArrival: p.isArrival,
+      isActive: p.isActive,
+    });
     setShowModal(true);
   };
   const openDeleteModal = async (pr: any) => {
@@ -328,10 +338,10 @@ export default function ProductsPage() {
               <input
                 type="number"
                 placeholder="Discount"
-                value={product.discount}
+                value={product.salesPrice}
                 className="border rounded px-3 py-2"
                 onChange={(e) => {
-                  setProduct({ ...product, discount: e.target.value });
+                  setProduct({ ...product, salesPrice: e.target.value });
                 }}
               />
 
@@ -408,18 +418,27 @@ export default function ProductsPage() {
                 />
                 Featured
               </label>
+
               <label>
                 <input
                   type="checkbox"
                   checked={product.isBestSeller}
                   onChange={(e) =>
-                    setProduct({
-                      ...product,
-                      isBestSeller: e.target.checked,
-                    })
+                    setProduct({ ...product, isBestSeller: e.target.checked })
                   }
                 />
-                BestSeller
+                Best Seller
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={product.isArrival}
+                  onChange={(e) =>
+                    setProduct({ ...product, isArrival: e.target.checked })
+                  }
+                />
+                New Arrival
               </label>
             </div>
 
@@ -441,12 +460,9 @@ export default function ProductsPage() {
 
                 setProduct((prev) => ({
                   ...prev,
-                  image:url,
+                  image: url,
                 }));
-              }
-            
-            
-            }
+              }}
             >
               {({ open }) => (
                 <button
@@ -458,17 +474,17 @@ export default function ProductsPage() {
               )}
             </CldUploadWidget>
 
-          <div className="flex gap-2 mt-3 flex-wrap">
-  {product.image ? (
-    <img
-      src={product.image}
-      className="w-20 h-20 object-cover rounded border"
-      alt="Product"
-    />
-  ) : (
-    <p className="text-sm text-gray-400">No image uploaded</p>
-  )}
-</div>
+            <div className="flex gap-2 mt-3 flex-wrap">
+              {product.image ? (
+                <img
+                  src={product.image}
+                  className="w-20 h-20 object-cover rounded border"
+                  alt="Product"
+                />
+              ) : (
+                <p className="text-sm text-gray-400">No image uploaded</p>
+              )}
+            </div>
 
             {/* Footer */}
             <div className="flex justify-end gap-3 mt-6">

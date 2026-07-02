@@ -12,7 +12,6 @@ type Category = {
 
 export default function CategoriesPage() {
   /* ---------------- STATES ---------------- */
-
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 

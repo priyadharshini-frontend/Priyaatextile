@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShoppingBag } from "lucide-react";
+
 
 interface CartItem {
   id: string;
@@ -7,6 +7,7 @@ interface CartItem {
   size: string;
   qty: number;
   price: number;
+  image:string;
 }
 
 interface Props {
@@ -37,7 +38,11 @@ export default function OrderSummary({ items }: Props) {
         {items.map((item) => (
           <div key={item.id} className="flex items-center gap-3 py-3">
             <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center text-[#7A1F3D] flex-shrink-0">
-              <ShoppingBag size={18} />
+             <img
+  src={item.image}
+  alt={item.name}
+  className="w-full h-full object-cover rounded-xl"
+/>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-800 truncate">{item.name}</p>

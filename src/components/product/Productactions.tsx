@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { addToCart } from "@/services/cart.service";
+import { useRouter } from "next/navigation";
 
 interface ProductActionsProps {
   productId: string;
@@ -10,6 +11,8 @@ interface ProductActionsProps {
 export default function ProductActions({
   productId,
 }: ProductActionsProps) {
+
+  const router = useRouter();
   const [qty, setQty] = useState(1);
 
   const handleAddToCart = async () => {
@@ -24,6 +27,15 @@ export default function ProductActions({
     }
   };
 
+const handleBuyNow = () => {
+  console.log("BUY NOW CLICKED");
+  console.log(productId);
+
+  router.push(
+    `/checkout?buyNow=true&productId=${productId}&qty=${qty}`
+  );
+};
+
   return (
     <div className="flex gap-4">
       <button
@@ -37,7 +49,7 @@ export default function ProductActions({
         </span>
       </button>
 
-      <button className="flex-1 bg-black text-white py-3 rounded-xl hover:bg-neutral-800">
+      <button className="flex-1 bg-black text-white py-3 rounded-xl hover:bg-neutral-800"   onClick={handleBuyNow} >
         BUY NOW
       </button>
     </div>
