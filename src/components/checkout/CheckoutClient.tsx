@@ -162,7 +162,7 @@ const Razorpay = (window as any).Razorpay;
 
     currency: order.currency,
 
-    name: "Ramya Boutique",
+    name: "Shree priyaa Boutique",
 
     description: "Order Payment",
 

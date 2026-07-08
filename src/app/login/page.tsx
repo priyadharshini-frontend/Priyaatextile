@@ -120,14 +120,14 @@ export default function Page() {
             )}
 
             {/* Forgot Password */}
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
               <Link
                 href="/forgotpass"
                 className="text-xs text-[#b08b2d] hover:text-[#2b0d0d]"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
 
             {/* Login Button */}
             <button

@@ -1,15 +1,15 @@
 // lib/product.ts
-import { prisma } from "@/lib/prisma";
+import db from "./db";
 
 export async function getProductBySlug(slug: string) {
-  const product = await prisma.product.findUnique({
+  const product = await db.product.findUnique({
     where: { slug },
   });
 
   return product;
 }
 export async function getProductById(id: string) {
-  return prisma.product.findUnique({
+  return db.product.findUnique({
     where: {
       id,
     },

@@ -1,35 +1,36 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/db"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model PasswordResetToken {
   id        String   @id @default(cuid())
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
   userId    String
-  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
-   @@index([userId])
-}
-model User {
-  id        String    @id @default(cuid())
-  name      String?
-  email     String    @unique
-  password  String
-  role      Role      @default(USER)
-  status    String    @default("active")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  carts     Cart[]
-  orders    Order[]
-  resetTokens PasswordResetToken[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
+model User {
+  id          String               @id @default(cuid())
+  name        String?
+  email       String               @unique
+  password    String
+  role        Role                 @default(USER)
+  status      String               @default("active")
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  carts       Cart[]
+  orders      Order[]
+  resetTokens PasswordResetToken[]
+}
 
 model Category {
   id            String        @id @default(cuid())
@@ -63,37 +64,34 @@ model Product {
   image         String
   brand         String?
   isFeatured    Boolean      @default(false)
-  isBestSeller  Boolean      @default(false)
-  isArrival     Boolean      @default(false)
   isActive      Boolean      @default(true)
   categoryId    String
   subCategoryId String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   size          String[]
+  isArrival     Boolean      @default(false)
+  isBestSeller  Boolean      @default(false)
   cartItems     CartItem[]
   orderItems    OrderItem[]
   category      Category     @relation(fields: [categoryId], references: [id])
   subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
 }
+
 model Hero {
-  id          String   @id @default(cuid())
-
-  title       String
-  subtitle    String?
-  description String?
-
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  description  String?
   desktopImage String
   mobileImage  String?
-
-  buttonText  String?
-  buttonLink  String?
-
-  isActive    Boolean @default(true)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  buttonText   String?
+  buttonLink   String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
+
 model Cart {
   id        String     @id @default(cuid())
   userId    String
@@ -113,38 +111,25 @@ model CartItem {
   product   Product  @relation(fields: [productId], references: [id])
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model Order {
-
-  id String @id @default(cuid())
-  userId     String
-  user       User @relation(fields:[userId],references:[id])
-  totalAmount Float
-
-  status OrderStatus @default(PENDING)
-
-  razorpayOrderId String?
-  paymentId String?
-
-  shippingName String
-  shippingPhone String
-
+  id                   String      @id @default(cuid())
+  userId               String
+  totalAmount          Float
+  status               OrderStatus @default(PENDING)
+  razorpayOrderId      String?
+  paymentId            String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
   shippingAddressLine1 String
   shippingAddressLine2 String?
-
-  shippingCity String
-  shippingState String
-  shippingPostalCode String
-  shippingCountry String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  items OrderItem[]
+  shippingCity         String
+  shippingCountry      String
+  shippingName         String
+  shippingPhone        String
+  shippingPostalCode   String
+  shippingState        String
+  user                 User        @relation(fields: [userId], references: [id])
+  items                OrderItem[]
 }
 
 model OrderItem {
@@ -157,7 +142,21 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
 }
 
+model Reel {
+  id           String   @id @default(cuid())
+  instagramUrl String
+  thumbnail    String
+  caption      String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String?
+}
 
+enum Role {
+  USER
+  ADMIN
+}
 
 enum OrderStatus {
   PENDING
@@ -165,17 +164,4 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
-}
-
-
-model Reel {
-  id            String   @id @default(cuid())
-  title         String?
-  caption       String
-  instagramUrl  String
-  thumbnail     String
-  isActive      Boolean  @default(true)
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { OrderStatus } from "prisma/generated/db";
+import OrderStatus from "@/components/Admin/OrderStatus";
 
 export async function GET(
   req: NextRequest,

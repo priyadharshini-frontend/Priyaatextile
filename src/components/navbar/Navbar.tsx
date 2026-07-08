@@ -89,7 +89,7 @@ export default function Navbar({ user }: NavbarProps) {
             />
              </div>
             <div className="leading-tight">
-              <h1 className="text-2xl font-bold text-[#8b1e1e]">
+              <h1 className="text-sm font-bold text-[#8b1e1e] sm:text-2xl">
                 Shree Priyaa's
               </h1>
               <p className="text-sm tracking-[0.25em] uppercase text-gray-600">
