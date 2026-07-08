@@ -327,7 +327,7 @@ export default function ProductsPage() {
 
               <input
                 type="number"
-                placeholder="Price"
+                placeholder="Original Price"
                 className="border rounded px-3 py-2"
                 value={product.price}
                 onChange={(e) => {
@@ -337,7 +337,7 @@ export default function ProductsPage() {
 
               <input
                 type="number"
-                placeholder="Discount"
+                placeholder="Sales Price"
                 value={product.salesPrice}
                 className="border rounded px-3 py-2"
                 onChange={(e) => {

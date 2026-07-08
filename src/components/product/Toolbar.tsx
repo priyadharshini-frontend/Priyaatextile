@@ -109,26 +109,25 @@ export default function Toolbar({
           </div>
 
           {/* Mobile Filter */}
-          <button
-            onClick={onOpenFilter}
-            className="
-              flex items-center justify-center gap-2
-              rounded-xl
-              border border-[#8b1e1e]
-              px-4 py-2.5
-              text-sm font-medium
-              text-[#8b1e1e]
-              transition
-              hover:bg-[#8b1e1e]
-              hover:text-white
-              lg:hidden
-            "
-          >
-            <SlidersHorizontal size={18} />
-            Filters
-          </button>
+          <div className="flex lg:hidden justify-end mb-4">
+ <button
+  onClick={() => {
+    console.log("Filter clicked");
+    onOpenFilter();
+    
+  }}
+  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8b1e1e] text-white"
+>
+  <SlidersHorizontal size={18} />
+  Filters
+</button>
+</div>
         </div>
       </div>
     </div>
+    
   );
+  
 }
+
+

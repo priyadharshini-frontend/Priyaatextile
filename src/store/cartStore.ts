@@ -1,13 +1,12 @@
+import { create } from "zustand";
+
 type CartStore = {
-  cart: any;
-
-  fetchCart: () => Promise<void>;
-
-  addToCart: (
-    productId: string
-  ) => Promise<void>;
-
-  removeItem: (
-    id: string
-  ) => Promise<void>;
+  cartCount: number;
+  setCartCount: (count: number) => void;
 };
+
+export const useCartStore = create<CartStore>((set) => ({
+  cartCount: 0,
+  setCartCount: (count) =>
+    set({ cartCount: count }),
+}));

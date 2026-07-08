@@ -5,32 +5,39 @@ import ProductCard from "../product/ProductCard";
 import { useProductStore } from "@/store/ProductStore";
 import { useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
+import Link from "next/link";
 
 export const Collection = () => {
   useProducts();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const categories = [
-    {
-      id: 1,
-      name: "Silk Saree",
-      image: "images/category/saree.jpeg",
-    },
-    {
-      id: 2,
-      name: "Cotton Saree",
-      image: "images/category/women.jpeg",
-    },
-    {
-      id: 3,
-      name: "New Arrivals",
-      image: "images/category/men.jpeg",
-    },
-    {
-      id: 4,
-      name: "Best Seller",
-      image: "images/category/girl.jpeg",
-    },
-  ];
+ const collections = [
+  {
+    id:1,
+    title: "Silk Saree",
+    category: "sarees",
+    subCategory: "kanchipuram-silk-sarees",
+    image: "/images/category/saree.jpeg",
+  },
+  {
+    id:2,
+    title: "Cotton Saree",
+    category: "sarees",
+    subCategory: "cotton-sarees",
+    image: "/images/category/women.jpeg",
+  },
+  {
+    id:3,
+    title: "New Arrivals",
+    category: "new-arrivals",
+    image: "/images/category/men.jpeg",
+  },
+  {
+    id:4,
+    title: "Best Seller",
+    category: "best-seller",
+    image: "/images/category/girl.jpeg",
+  },
+];
 
   return (
     <section
@@ -72,9 +79,12 @@ export const Collection = () => {
   pb-2 
 "
         >
-          {categories.map((category) => (
+          {collections.map((item) => (
+            <Link key={item.id}
+  href={`/product?category=${item.category}&subcategory=${item.subCategory}`}
+>
             <button
-              key={category.id}
+              key={item.title}
               className="flex-shrink-0 group text-center flex flex-col items-center"
             >
               <div
@@ -82,16 +92,17 @@ export const Collection = () => {
                 style={{ border: "2px solid #d4af37" }}
               >
                 <img
-                  src={category.image}
-                  alt={category.name}
+                  src={item.image}
+                  alt={item.title}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <p className="mt-3 font-medium text-gray-800 group-hover:text-black">
-                {category.name}
+                {item.title}
               </p>
             </button>
+            </Link>
           ))}
         </div>
 
@@ -103,6 +114,7 @@ export const Collection = () => {
               boxShadow: "0 8px 24px rgba(139, 30, 30, 0.2)",
             }}
           >
+            <a href="/product">
             <span className="relative z-10 flex items-center justify-center gap-2 group-hover:gap-3 transition-all">
               View All Collection
               <svg
@@ -119,6 +131,7 @@ export const Collection = () => {
                 />
               </svg>
             </span>
+            </a>
           </button>
         </div>
       </div>

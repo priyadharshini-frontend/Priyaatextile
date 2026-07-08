@@ -1,11 +1,13 @@
   import Sidebar from "@/components/Admin/Sidebar";
   import Navbar from "@/components/Admin/Navbar";
+  import { requireAdmin } from "@/lib/auth-guard";
 
-  export default function AdminLayout({
+  export default async function AdminLayout({
     children,
   }: {
     children: React.ReactNode;
   }) {
+      await requireAdmin();
     return (
       <div className="flex h-screen bg-gray-100">
         {/* Sidebar */}

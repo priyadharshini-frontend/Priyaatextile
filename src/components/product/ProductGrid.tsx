@@ -1,12 +1,14 @@
-'use client';
-import ProductCard from './ProductCard';
-import { useProductStore } from '@/store/ProductStore';
+"use client";
 
+import ProductCard from "./ProductCard";
 
+interface ProductGridProps {
+  products: any[];
+}
 
-export default function ProductGrid() {
-  const products=useProductStore((s)=>s.products)
-  // Empty State
+export default function ProductGrid({
+  products,
+}: ProductGridProps) {
   if (!products.length) {
     return (
       <div className="rounded-3xl border border-dashed border-[#eadfce] bg-white py-20 text-center">
@@ -16,9 +18,9 @@ export default function ProductGrid() {
       </div>
     );
   }
+
   return (
-    <div
-      className='grid gap-6 sm:grid-cols-2 lg:grid-cols-4 grid-cols-2'>
+    <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {products.map((product) => (
         <ProductCard
           key={product.id}

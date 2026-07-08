@@ -2,6 +2,7 @@ import Navbar from "@/components/common/navbar/Navbar";
 import { getCurrentUser } from "@/lib/curentUser";
 import Link from "next/link";
 import db from "@/lib/db";
+import { redirect } from "next/navigation";
 
 
 export default async function MyOrdersPage() {
@@ -30,28 +31,37 @@ export default async function MyOrdersPage() {
   },
 });
 
+if (!user) {
+  redirect("/register");
+}
 
   return (
     <>
 
      <Navbar user={user} />
 
-    <div className="min-h-screen bg-gray-50 py-10 mt-30">
+    <div className="min-h-screen bg-gray-50 py-10 pt-30">
       <div className="max-w-5xl mx-auto px-4">
+        {orders.length === 0 ? (
+  <div className="bg-white rounded-2xl shadow-sm border p-12 text-center">
+    <h2 className="text-2xl font-semibold text-gray-800">
+      No Orders Yet
+    </h2>
 
-        {/* Heading */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            My Orders
-          </h1>
-          <p className="text-gray-500 mt-2">
-            Track your recent purchases.
-          </p>
-        </div>
+    <p className="text-gray-500 mt-2">
+      You haven't placed any orders yet.
+    </p>
 
-        {/* Order Card */}
-        {orders.map((order:any)=>(
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-10 " key={order.id}
+    <Link
+      href="/product"
+      className="inline-block mt-6 px-6 py-3 rounded-xl bg-[#7A1F3D] text-white hover:bg-[#641731] transition"
+    >
+      Continue Shopping
+    </Link>
+  </div>
+) : (
+  orders.map((order: any) => (
+           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-10 " key={order.id}
 >
 
           {/* Header */}
@@ -144,10 +154,14 @@ export default async function MyOrdersPage() {
           </div>
 
         </div>
+  ))
+)}
+
+         
 
             
 
-        ))}
+       
     
 
       </div >

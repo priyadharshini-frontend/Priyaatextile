@@ -14,17 +14,24 @@ export async function GET() {
       });
     }
 
+   
     const cart = await db.cart.findFirst({
-      where: {
-        userId: user.id,
-      },
-      include: {
-        items: true,
-      },
-    });
+  where: {
+    userId: user.id,
+  },
+  include: {
+    items: true,
+  },
+});
+
+const count =
+  cart?.items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  ) || 0;
 
     return NextResponse.json({
-      count: cart?.items.length || 0,
+      count,
     });
   } catch (error) {
     return NextResponse.json(

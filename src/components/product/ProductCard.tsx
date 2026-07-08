@@ -32,12 +32,12 @@ export default function ProductCard({ product }: Props) {
         <div className="relative overflow-hidden">
 
           {/* Wishlist */}
-          <button
+          {/* <button
             onClick={(e) => e.preventDefault()}
             className="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
           >
             <Heart className="w-5 h-5 text-red-400 fill-red-400" />
-          </button>
+          </button> */}
 
           {/* Product Image */}
           <img

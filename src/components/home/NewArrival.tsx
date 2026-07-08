@@ -69,6 +69,7 @@ export const NewArrival = () => {
 
         {/* Right: View All Button */}
         <div className="flex gap-4 flex-col md:flex-row md:items-center justify-center mt-5">
+          <a href="/product">
           <button
             className="group relative px-4 py-2 font-bold text-lg transition-all duration-300 hover:scale-105 active:scale-95 rounded-2xl overflow-hidden text-red-800"
             style={{
@@ -76,6 +77,7 @@ export const NewArrival = () => {
               boxShadow: "0 8px 24px rgba(139, 30, 30, 0.2)",
             }}
           >
+            <a href="/product">
             <span className="relative z-10 flex items-center justify-center gap-2 group-hover:gap-3 transition-all">
               View All Collection
               <svg
@@ -92,7 +94,9 @@ export const NewArrival = () => {
                 />
               </svg>
             </span>
+            </a>
           </button>
+          </a>
         </div>
 
         {/* Bottom CTA Section */}

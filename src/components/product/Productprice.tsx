@@ -1,30 +1,44 @@
-interface ProductPriceProps {
-  price: number;
-  salesPrice?: number | null;
-}
+type Props = {
+  product: any;
+};
 
-export default function ProductPrice({ price, salesPrice }: ProductPriceProps) {
-  const hasDiscount = !!salesPrice && salesPrice < price;
-  const discountPercent = hasDiscount
-    ? Math.round((1 - salesPrice! / price) * 100)
+export default function ProductPrice({ product }: Props) {
+
+  const discount = product.salesPrice
+    ? Math.round(
+        ((product.price - product.salesPrice) /
+          product.price) *
+          100
+      )
     : 0;
 
   return (
-    <div className="flex items-baseline gap-3">
-      <span className="text-2xl font-semibold text-[#8B1538]">
-        ₹{(hasDiscount ? salesPrice! : price).toLocaleString("en-IN")}
-      </span>
+    <div className="space-y-3">
 
-      {hasDiscount && (
-        <>
-          <span className="text-base text-gray-400 line-through">
-            ₹{price.toLocaleString("en-IN")}
+      <div className="flex items-center gap-4">
+
+        <span className="text-4xl font-bold text-red-700">
+          ₹{product.salesPrice || product.price}
+        </span>
+
+        {product.salesPrice && (
+          <span className="line-through text-xl text-gray-400">
+            ₹{product.price}
           </span>
-          <span className="rounded-full bg-[#F4D88C] px-2.5 py-1 text-xs text-[#6B4E00]">
-            {discountPercent}% off
+        )}
+
+        {discount > 0 && (
+          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+            {discount}% OFF
           </span>
-        </>
-      )}
+        )}
+
+      </div>
+
+      <p className="text-green-700 font-medium">
+        ✔ Inclusive of all taxes
+      </p>
+
     </div>
   );
 }

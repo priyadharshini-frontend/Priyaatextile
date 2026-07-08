@@ -116,7 +116,7 @@ function InstagramBadge() {
         {/* CTA */}
         <div className="text-center mt-10">
           <a
-            href="https://www.instagram.com/yourshopname"
+            href="https://www.instagram.com/priyaatextile_59?igsh=NmZidzVkYWN6dHA3"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-6 py-2.5 rounded-full border border-[#C13584] text-[#C13584] text-sm font-medium hover:bg-[#C13584] hover:text-white transition-colors"

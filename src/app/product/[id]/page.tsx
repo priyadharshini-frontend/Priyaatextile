@@ -39,7 +39,9 @@ if (!product) {
 
       </div>
 
-      <RelatedProducts />
+      <RelatedProducts  productId={product.id}
+    categoryId={product.categoryId}
+    subCategoryId={product.subCategoryId ?? undefined} />
 
     </div>
   );

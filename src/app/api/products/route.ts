@@ -103,56 +103,164 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request:NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const search=request.nextUrl.searchParams.get("search")||"";
-    const sort = request.nextUrl.searchParams.get("sort") || "featured";
-    console.log("Sorted",sort)
-    //  console.log("Search Value:", search);
-let orderBy = {};
+    // Query Params
+    const search = request.nextUrl.searchParams.get("search") || "";
+    const category = request.nextUrl.searchParams.get("category") || "";
+    const subcategory =
+      request.nextUrl.searchParams.get("subcategory") || "";
+    const type = request.nextUrl.searchParams.get("type") || "";
+    const featured =
+      request.nextUrl.searchParams.get("featured") || "";
+    const sale = request.nextUrl.searchParams.get("sale") || "";
+    const sort = request.nextUrl.searchParams.get("sort") || "newest";
 
-switch (sort) {
-  case "newest":
-    orderBy = { createdAt: "desc" };
-    break;
+    const page = Number(
+      request.nextUrl.searchParams.get("page") || 1
+    );
 
-  case "price-low":
-    orderBy = { salesPrice: "asc" };
-    break;
+    const limit = Number(
+      request.nextUrl.searchParams.get("limit") || 12
+    );
+    const maxPrice = Number(
+  request.nextUrl.searchParams.get("maxPrice") || 0
+);
 
-  case "price-high":
-    orderBy = { salesPrice: "desc" };
-    break;
+    // Sorting
+    let orderBy: any = {};
 
-  default:
-    orderBy = { createdAt: "desc" };
+    switch (sort) {
+      case "newest":
+        orderBy = {
+          createdAt: "desc",
+        };
+        break;
+
+      case "oldest":
+        orderBy = {
+          createdAt: "asc",
+        };
+        break;
+
+      case "price-low":
+        orderBy = {
+          salesPrice: "asc",
+        };
+        break;
+
+      case "price-high":
+        orderBy = {
+          salesPrice: "desc",
+        };
+        break;
+
+      case "name":
+        orderBy = {
+          name: "asc",
+        };
+        break;
+
+      default:
+        orderBy = {
+          createdAt: "desc",
+        };
+    }
+
+    // Dynamic Filters
+    const where: any = {
+      isActive: true,
+    };
+
+    // Search
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
+
+    // Category
+    if (category) {
+      where.category = {
+        slug: category,
+      };
+    }
+
+    // Sub Category
+    if (subcategory) {
+      where.subCategory = {
+        slug: subcategory,
+      };
+    }
+
+    // Featured
+    if (featured === "true") {
+      where.isFeatured = true;
+    }
+
+    // New Arrival
+    if (type === "new") {
+      where.isArrival = true;
+    }
+
+    // Best Seller
+    if (type === "bestseller") {
+      where.isBestSeller = true;
+    }
+
+    // Sale Products
+    if (sale === "true") {
+      where.salesPrice = {
+        not: null,
+      };
+    }
+
+    //price
+    if (maxPrice > 0) {
+  where.price = {
+    lte: maxPrice,
+  };
 }
-    const products = await db.product.findMany({
-      where:search
-      ?{
-        name:{
-          contains:search,
-          mode:"insensitive"
-        }
-      }
-      :{},
-      include: {
-        category: true,
-        subCategory: true,
-      },
-    orderBy,
-    });
+
+    const skip = (page - 1) * limit;
+
+    const [products, totalProducts] = await Promise.all([
+      db.product.findMany({
+        where,
+        include: {
+          category: true,
+          subCategory: true,
+        },
+        orderBy,
+        skip,
+        take: limit,
+      }),
+
+      db.product.count({
+        where,
+      }),
+    ]);
 
     return NextResponse.json({
       success: true,
+      currentPage: page,
+      totalPages: Math.ceil(totalProducts / limit),
+      totalProducts,
+      count: products.length,
       data: products,
     });
   } catch (error) {
     console.log(error);
 
     return NextResponse.json(
-      { message: "Failed to fetch Products" },
-      { status: 500},
+      {
+        success: false,
+        message: "Failed to fetch products",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

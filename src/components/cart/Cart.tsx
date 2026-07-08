@@ -120,7 +120,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#faf8f3] via-[#f5f2ed] to-[#faf8f3] py-8 lg:py-20 mt-15">
+    <div className="min-h-screen bg-gray-50 py-8 lg:py-20 mt-10">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="mb-10">
           <h1 className="text-4xl lg:text-5xl font-bold text-[#1a0f1a]">
