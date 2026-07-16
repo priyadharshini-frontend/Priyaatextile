@@ -1,4 +1,5 @@
 export interface Product{
+     productCode:string;
     isBestSeller:boolean;
     id:string;
     name:string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState,FormEvent } from "react";
-import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, ArrowRight,Phone } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ export default function Page() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ export default function Page() {
         },
         body: JSON.stringify({
           name,
+          mobile,
           email,
           password,
         }),
@@ -106,6 +108,17 @@ export default function Page() {
                 className="w-full bg-transparent text-[#2b0d0d] outline-none placeholder:text-gray-400"
               />
             </div>
+                <div className="flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#faf7f2] px-4 h-14">
+              <Phone className="h-5 w-5 text-[#d4af37]" />
+
+              <input
+                type="text"
+                placeholder="Mobile number"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                className="w-full bg-transparent text-[#2b0d0d] outline-none placeholder:text-gray-400"
+              />
+            </div>
 
             {/* Email */}
             <div className="flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#faf7f2] px-4 h-14">
@@ -117,7 +130,6 @@ export default function Page() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent text-[#2b0d0d] outline-none placeholder:text-gray-400"
-                required
               />
             </div>
 

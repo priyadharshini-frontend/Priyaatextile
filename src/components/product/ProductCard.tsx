@@ -30,16 +30,6 @@ export default function ProductCard({ product }: Props) {
 
         {/* Image Section */}
         <div className="relative overflow-hidden">
-
-          {/* Wishlist */}
-          {/* <button
-            onClick={(e) => e.preventDefault()}
-            className="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
-          >
-            <Heart className="w-5 h-5 text-red-400 fill-red-400" />
-          </button> */}
-
-          {/* Product Image */}
           <img
             src={product.image}
             alt={product.name}
@@ -89,11 +79,21 @@ export default function ProductCard({ product }: Props) {
         {/* Content */}
         <div className="px-4 py-3 text-center">
           <h3 className="text-base font-medium text-gray-800">{product.name}</h3>
-          <p className="text-gray-500 line-through mt-1">
-            Rs.{product.price}
-          </p>
-          <p className="text-[#E91E63] font-bold ">
+          <div className="flex justify-center gap-3">
+             <p className="text-[#E91E63] font-bold ">
             Rs.{product.salesPrice}
+            <span className="text-gray-500 line-through text-sm font-medium ms-4">
+               Rs.{product.price}
+            </span>
+          </p>
+           
+         
+
+          </div>
+         
+           <p className="text-gray-800 mt-1 font-medium">
+            PTC:
+            {product.productCode}
           </p>
         </div>
 

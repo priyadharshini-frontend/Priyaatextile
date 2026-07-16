@@ -21,7 +21,8 @@ model PasswordResetToken {
 model User {
   id          String               @id @default(cuid())
   name        String?
-  email       String               @unique
+  mobile      String               @unique
+  email       String?               @unique
   password    String
   role        Role                 @default(USER)
   status      String               @default("active")
@@ -55,6 +56,7 @@ model SubCategory {
 
 model Product {
   id            String       @id @default(cuid())
+  productCode   String       @unique
   name          String
   slug          String       @unique
   description   String

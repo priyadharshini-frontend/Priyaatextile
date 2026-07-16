@@ -6,10 +6,13 @@ export default function WhatsAppButton() {
 
   
   return (
-     <a href="tel:+919345948849"   target="_blank"
-      rel="noopener noreferrer"
-      className="whatsapp-float"
-      aria-label="Chat on WhatsApp">
+    <a
+  href="https://wa.me/9345948849"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="whatsapp-float"
+  aria-label="Chat on WhatsApp"
+>
         <img src="/whatsapp-logo.png" alt="WhatsApp" width={35} height={35} />
               
               </a>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState,FormEvent} from "react";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Phone, Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export default function Page() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function Page() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          mobile,
           password,
         }),
       });
@@ -86,13 +86,13 @@ export default function Page() {
           <form onSubmit={handleLogin} className="mt-10 space-y-5">
             {/* Email */}
             <div className="flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#faf7f2] px-4 h-14">
-              <Mail className="h-5 w-5 text-[#d4af37]" />
+              <Phone className="h-5 w-5 text-[#d4af37]" />
 
               <input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Mobile number"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
                 className="w-full bg-transparent text-[#2b0d0d] outline-none placeholder:text-gray-400"
                 required
               />

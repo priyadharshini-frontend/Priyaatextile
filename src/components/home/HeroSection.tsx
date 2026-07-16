@@ -21,11 +21,11 @@ export default async function HeroSection() {
 
       {/* Mobile */}
 
-      <div className="block lg:hidden relative mt-25" style={{ height: "100vh" }}>
+      <div className="block lg:hidden relative" style={{ height: "100vh" }}>
          <img
     src={hero.mobileImage||"/images/Banner/ban1.jpeg"}
     alt={hero.title}
-    className="w-full h-full object-cover"
+    className="w-full h-full sm:object-cover"
   />
 
         {/* <Image

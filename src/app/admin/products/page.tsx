@@ -14,6 +14,7 @@ export default function ProductsPage() {
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [product, setProduct] = useState({
+     productCode:"",
     name: "",
     price: "",
     salesPrice: "",
@@ -88,6 +89,7 @@ export default function ProductsPage() {
 
       // reset form
       setProduct({
+         productCode:"",
          name: "",
   price: "",
   salesPrice: "",
@@ -116,6 +118,7 @@ export default function ProductsPage() {
     setSelectedId(p.id);
 
     setProduct({
+       productCode:p.productCode,
       name: p.name,
       price: p.price.toString(),
       salesPrice: p.salesPrice?.toString() || "",
@@ -193,7 +196,7 @@ export default function ProductsPage() {
               {products.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-6 text-gray-500">
-                    Loading...
+                    No product found
                   </td>
                 </tr>
               ) : (
@@ -227,7 +230,7 @@ export default function ProductsPage() {
                     {/* Product Name */}
                     <td className="p-4">
                       <div>
-                        <p className="font-medium">{p.name}</p>
+                        <p className="font-medium">{p.productCode}-{p.name}</p>
 
                         <p className="text-sm text-gray-500 line-clamp-1">
                           {p.description}
@@ -249,7 +252,10 @@ export default function ProductsPage() {
                     {/* Price */}
                     <td className="p-4">
                       <div>
-                        <p className="font-medium">₹{p.price}</p>
+                        <p className="font-medium"> ₹{p.salesPrice}</p>
+                        <p className="text-xs text-gray-500">
+                          ₹{p.price}
+                        </p>
 
                         {p.discount > 0 && (
                           <p className="text-sm text-green-600">
@@ -277,14 +283,15 @@ export default function ProductsPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => openEditModal(p)}
-                          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          className="px-3 py-1 text-white rounded hover:bg-blue-600"
+                          style={{ backgroundColor: "blue", color: "white" }}
                         >
                           Edit
                         </button>
-
                         <button
                           onClick={() => openDeleteModal(p)}
-                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          className="px-3 py-1 text-white rounded hover:bg-red-600"
+                          style={{ backgroundColor: "red", color: "white" }}
                         >
                           Delete
                         </button>
@@ -323,7 +330,17 @@ export default function ProductsPage() {
                 onChange={(e) => {
                   setProduct({ ...product, name: e.target.value });
                 }}
+                
               />
+               <input
+                type="text"
+                placeholder="Product Code"
+                value={product.productCode}
+                className="border rounded px-3 py-2"
+                onChange={(e) => {
+                  setProduct({ ...product, productCode: e.target.value });
+                }}
+                />
 
               <input
                 type="number"

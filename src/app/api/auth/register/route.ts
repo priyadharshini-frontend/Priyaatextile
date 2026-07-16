@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const {name,email,password}=validation.data;
+    const {name,mobile,email,password}=validation.data;
 
     const existingUser = await db.user.findUnique({
       where: { email },
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     const user = await db.user.create({
       data: {
         name,
+        mobile,
         email,
         password: hashedPassword,
       },
@@ -46,7 +47,9 @@ export async function POST(req: NextRequest) {
         User: {
     id: user.id,
     name: user.name,
+    mobile:user.mobile,
     email: user.email,
+
     
   }
       },

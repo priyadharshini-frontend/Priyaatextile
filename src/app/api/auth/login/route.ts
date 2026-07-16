@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract validated data
-    const { email, password } = result.data;
+    const { mobile, password } = result.data;
 
     // Find user by email
     const user = await db.user.findUnique({
       where: {
-        email,
+        mobile,
       },
     });
 
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
+        mobile: user.mobile,
       },
     });
 

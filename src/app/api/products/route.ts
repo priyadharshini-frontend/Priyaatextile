@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const {
+      productCode,
       name,
       description,
       price,
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     // 1. Validate
     const slug = name.toLowerCase().replace(/\s+/g, "-");
-    if (!name || !price || !categoryId || !subCategoryId ||!description) {
+    if (!name || !price || !categoryId || !subCategoryId ||!description ||!productCode) {
       return NextResponse.json(
         { message: "Required fields missing" },
         { status: 400 },
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
     // 4. Create product
     const product = await db.product.create({
       data: {
+       productCode,
        name,
        slug,
       description,
@@ -174,10 +176,20 @@ export async function GET(request: NextRequest) {
 
     // Search
     if (search) {
-      where.name = {
+      where.OR = [
+    {
+      name: {
         contains: search,
         mode: "insensitive",
-      };
+      },
+    },
+    {
+      productCode: {
+        contains: search,
+        mode: "insensitive",
+      },
+    },
+  ];
     }
 
     // Category

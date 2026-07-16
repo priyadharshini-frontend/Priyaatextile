@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Sora } from "next/font/google";
 import {
   Menu,
   ShoppingCart,
@@ -17,7 +18,7 @@ interface NavbarProps {
   user: {
     id: string;
     name: string | null;
-    email: string;
+    mobile: string;
   } | null;
 }
 
@@ -31,7 +32,10 @@ interface Category {
     slug: string;
   }[];
 }
-
+const sora = Sora({
+  subsets: ["latin"],
+  weight: ["700"],
+});
 export default function Navbar({ user }: NavbarProps) {
     useCartCount();
       const cartCount =
@@ -46,6 +50,7 @@ export default function Navbar({ user }: NavbarProps) {
   const [categories, setCategories] = useState<
     Category[]
   >([]);
+
 
   useEffect(() => {
     fetchCategories();
@@ -77,10 +82,10 @@ export default function Navbar({ user }: NavbarProps) {
   
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between sm:px-6 px-2 ">
 
         {/* Logo */}
-         <Link href="/" className="font-bold text-[#8b1e1e] flex items-center gap-4">
+         <Link href="/" className="font-bold text-[#8b1e1e] flex items-center gap-1">
           <div className="w-20">
             <img
               src="/images/logo.png"
@@ -89,11 +94,11 @@ export default function Navbar({ user }: NavbarProps) {
             />
              </div>
             <div className="leading-tight">
-              <h1 className="text-sm font-bold text-[#8b1e1e] sm:text-2xl">
-                Shree Priyaa's
+              <h1 className={`${sora.className} text-2xl font-bold text-[#8b1e1e] sm:text-2xl uppercase` }>
+                Priyaa
               </h1>
-              <p className="text-sm tracking-[0.25em] uppercase text-gray-600">
-                Boutique
+              <p className={`${sora.className}text-sm  uppercase text-black font-bold`}>
+                Textile
               </p>
            
           </div>
@@ -289,18 +294,13 @@ export default function Navbar({ user }: NavbarProps) {
         </h3>
 
         <p className="text-sm text-gray-500">
-          {user.email}
+          {user.mobile}
         </p>
       </div>
 
       {/* Menu */}
       <div className="p-2">
-        <Link
-          href="/profile"
-          className="block rounded-lg px-4 py-2 hover:bg-gray-100"
-        >
-          My Profile
-        </Link>
+      
 
        
 
