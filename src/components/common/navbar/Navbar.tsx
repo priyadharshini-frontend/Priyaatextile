@@ -6,7 +6,8 @@ interface NavbarProps {
   user: {
     id: string;
     name: string | null;
-    email: string;
+    email: string | null;
+    mobile: string;
   } | null;
 }
 
