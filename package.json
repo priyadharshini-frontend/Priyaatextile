@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
     "db": "npx prisma db pull --schema prisma/db.prisma --force && npx prisma generate --schema prisma/db.prisma"
   },
   "dependencies": {
