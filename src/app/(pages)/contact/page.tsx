@@ -132,7 +132,7 @@ export default function ContactPage() {
 
             <p className="mt-2 text-gray-500">
 
-              10 AM - 9 PM
+              9.30 AM - 8.30 PM
 
             </p>
 
@@ -220,7 +220,7 @@ export default function ContactPage() {
 
                   <p className="text-gray-600 mt-2">
 
-                    +91 XXXXX XXXXX
+                    +91 98765 43210
 
                   </p>
 

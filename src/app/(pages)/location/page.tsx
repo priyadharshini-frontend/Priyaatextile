@@ -15,7 +15,7 @@ const stores = [
     address:
       "No. XX, Main Road, Vellore, Tamil Nadu - 632001",
     phone: "+91 98765 43210",
-    timing: "10:00 AM - 9:00 PM",
+    timing: " 9:30 AM - 8:30 PM",
     map: "https://maps.google.com",
     image: "/images/store/vellore.jpg",
   },
@@ -25,7 +25,7 @@ const stores = [
     address:
       "No. XX, Bazaar Street, Gudiyattam, Tamil Nadu - 632602",
     phone: "+91 98765 43210",
-    timing: "10:00 AM - 9:00 PM",
+    timing: " 9:30 AM - 8:30 PM",
     map: "https://maps.google.com",
     image: "/images/store/gudiyattam.jpg",
   },
@@ -121,7 +121,7 @@ export default function StoreLocationPage() {
 
             <p className="text-gray-500 mt-2">
 
-              10:00 AM - 9:00 PM
+              9:30 AM - 8:30 PM
 
             </p>
 

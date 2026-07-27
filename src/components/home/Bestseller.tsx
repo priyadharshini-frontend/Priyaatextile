@@ -3,18 +3,18 @@
 import { useState } from "react";
 import ProductCard from "../product/ProductCard";
 import { useProductStore } from "@/store/ProductStore";
+import ProductGridSkeleton from "../product/ProductGridSkeleton";
 
 export const Bestseller = () => {
   const products = useProductStore((state) => state.products);
-  console.log(products);
-
+  const loading = useProductStore((state) => state.loading);
   const features = products.filter((p) => p.isBestSeller);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <section className="relative py-10 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-7xl sm:px-6 px-2 lg:px-8 relative z-10">
         {/* Header Section */}
         <div className="mb-16">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
@@ -38,31 +38,38 @@ export const Bestseller = () => {
             </div>
           </div>
         </div>
-        <div className="grid gap-8 grid-cols-2 lg:grid-cols-4">
-          {features.map((product, index) => (
-            <div
-              key={product.id}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              style={{
-                animation: `slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.1}s both`,
-              }}
-            >
-              <div
-                className="mb-3 inline-block px-3 py-1 rounded-full text-xs font-bold text-white transition-all duration-500"
-                style={{
-                  backgroundColor: "#8b1e1e",
-                  opacity: hoveredIndex === index ? 1 : 0.5,
-                  transform: hoveredIndex === index ? "scale(1.1)" : "scale(1)",
-                }}
-              >
-                {String(index + 1).padStart(2, "0")}
-              </div>
+       <div className="grid sm:gap-8 grid-cols-2 lg:grid-cols-4 gap-2">
+  {loading ? (
+    Array.from({ length: 8 }).map((_, index) => (
+      <ProductGridSkeleton key={index} />
+    ))
+  ) : (
+    features.map((product, index) => (
+      <div
+        key={product.id}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
+        style={{
+          animation: `slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.1}s both`,
+        }}
+      >
+        {/* <div
+          className="mb-3 inline-block px-3 py-1 rounded-full text-xs font-bold text-white transition-all duration-500"
+          style={{
+            backgroundColor: "#8b1e1e",
+            opacity: hoveredIndex === index ? 1 : 0.5,
+            transform:
+              hoveredIndex === index ? "scale(1.1)" : "scale(1)",
+          }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </div> */}
 
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        <ProductCard product={product} />
+      </div>
+    ))
+  )}
+</div>
 
         {/* Right: View All Button */}
         <div className="flex gap-4 flex-col md:flex-row md:items-center justify-center mt-5">

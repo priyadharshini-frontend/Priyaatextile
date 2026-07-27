@@ -24,7 +24,7 @@ const testimonials = [
    {
     id: 5,
      image: "/images/review/r5.jpeg",
-    caption: "Custom saree review",
+    caption: "Custom Saree Review",
   },
 ];
 

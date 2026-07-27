@@ -10,36 +10,36 @@ import {
 } from "lucide-react";
 
 const policies = [
-  {
-    icon: ShieldCheck,
-    title: "Return Eligibility",
-    description:
-      "Products can be returned only if they are damaged, defective, or incorrect. Return requests must be made within 7 days of delivery.",
-  },
-  {
-    icon: Ban,
-    title: "Non-Returnable Items",
-    description:
-      "Used, washed, altered, customized products or items without original tags and packaging are not eligible for return.",
-  },
-  {
-    icon: RefreshCcw,
-    title: "Refund Process",
-    description:
-      "After inspection of the returned product, refunds will be initiated to the original payment method within 5–7 business days.",
-  },
-  {
-    icon: ArrowRightLeft,
-    title: "Exchange Policy",
-    description:
-      "Eligible products can be exchanged based on stock availability. If unavailable, a refund will be issued.",
-  },
-  {
-    icon: Package,
-    title: "Return Shipping",
-    description:
-      "For damaged or incorrect products, Priyaa Textile will assist with return shipping or arrange pickup wherever applicable.",
-  },
+  // {
+  //   icon: ShieldCheck,
+  //   title: "Return Eligibility",
+  //   description:
+  //     "Products can be returned only if they are damaged, defective, or incorrect. Return requests must be made within 7 days of delivery.",
+  // },
+  // {
+  //   icon: Ban,
+  //   title: "Non-Returnable Items",
+  //   description:
+  //     "Used, washed, altered, customized products or items without original tags and packaging are not eligible for return.",
+  // },
+  // {
+  //   icon: RefreshCcw,
+  //   title: "Refund Process",
+  //   description:
+  //     "After inspection of the returned product, refunds will be initiated to the original payment method within 5–7 business days.",
+  // },
+  // {
+  //   icon: ArrowRightLeft,
+  //   title: "Exchange Policy",
+  //   description:
+  //     "Eligible products can be exchanged based on stock availability. If unavailable, a refund will be issued.",
+  // },
+  // {
+  //   icon: Package,
+  //   title: "Return Shipping",
+  //   description:
+  //     "For damaged or incorrect products, Priyaa Textile will assist with return shipping or arrange pickup wherever applicable.",
+  // },
   {
     icon: BadgeCheck,
     title: "Order Cancellation",
@@ -94,9 +94,9 @@ export default function ReturnRefundPolicyPage() {
 
       <section className="max-w-7xl mx-auto px-6 -mt-14 relative z-20">
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
 
-          <div className="bg-white rounded-3xl shadow-lg p-8">
+          {/* <div className="bg-white rounded-3xl shadow-lg p-8">
 
             <RefreshCcw className="text-[#8B1E1E]" size={34}/>
 
@@ -122,8 +122,8 @@ export default function ReturnRefundPolicyPage() {
               5–7 Business Days
             </p>
 
-          </div>
-
+          </div> */}
+{/* 
           <div className="bg-white rounded-3xl shadow-lg p-8">
 
             <Package className="text-[#8B1E1E]" size={34}/>
@@ -136,7 +136,7 @@ export default function ReturnRefundPolicyPage() {
               Eligible Orders
             </p>
 
-          </div>
+          </div> */}
 
           <div className="bg-white rounded-3xl shadow-lg p-8">
 
