@@ -1,4 +1,4 @@
-export async function addToCart(productId: string) {
+export async function addToCart(productId: string, quantity: number) {
   const response = await fetch("/api/cart", {
     method: "POST",
     headers: {

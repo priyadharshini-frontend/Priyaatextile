@@ -20,7 +20,7 @@ export default function ProductActions({
       console.log("Product ID:", productId);
 
     try {
-      await addToCart(productId);
+      await addToCart(productId,qty);
       toast.success("Added to cart");
       router.push("/cart");
       
