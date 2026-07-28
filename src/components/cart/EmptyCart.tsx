@@ -40,7 +40,7 @@ export default function EmptyCart() {
         </div>
 
         <Link
-          href="/collections"
+          href="/product"
           className="inline-block mt-10"
         >
           Start Shopping

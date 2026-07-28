@@ -8,7 +8,7 @@ import OrderSummary from "@/components/cart/OrderSummary";
 import { getCart } from "@/services/cart.service";
 
 // const TAX_RATE = 0.18;
-const SHIPPING_FEE = 100;
+const SHIPPING_FEE = 0;
 const FREE_SHIPPING_THRESHOLD = 1000;
 
 export default function Cart() {

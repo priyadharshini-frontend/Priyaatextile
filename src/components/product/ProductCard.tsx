@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { addToCart } from "@/services/cart.service";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Props {
   product: Product;
@@ -29,6 +30,7 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
     e.stopPropagation();
     if (isAdding) return;
     setIsAdding(true);
+      
     try {
       await addToCart(product.id, quantity);
       setJustAdded(true);
@@ -36,9 +38,23 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
         router.push("/cart");
       }, 550);
     } catch (error) {
-      console.log(error);
-      setIsAdding(false);
+    if (error instanceof Error) {
+      if (error.message.includes("Please login first")) {
+        toast.error("Please create an account or log in to add items to your cart.");
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
+
+        return;
+      }
+
+      toast.error(error.message);
+    } else {
+      toast.error("Something went wrong.");
     }
+  }
+
   };
 
   const toggleWishlist = (e: React.MouseEvent) => {
@@ -90,7 +106,7 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
               bg-gradient-to-t from-[#3D1F1F]/90 via-[#3D1F1F]/70 to-transparent"
             onClick={(e) => e.preventDefault()}
           >
-            <div className="flex items-center rounded-lg overflow-hidden h-10 bg-white/95">
+            {/* <div className="flex items-center rounded-lg overflow-hidden h-10 bg-white/95">
               <span className="px-3 text-sm font-medium text-stone-800 select-none min-w-[1.5rem] text-center">
                 {qty}
               </span>
@@ -116,10 +132,11 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
                   ▼
                 </button>
               </div>
-            </div>
+            </div> */}
 
             <button
               onClick={(e) => handleAddToCart(e, qty)}
+
               disabled={isAdding}
               className="flex-1 h-10 rounded-lg font-semibold text-sm flex items-center justify-center gap-2
                 text-white transition-all duration-200 disabled:opacity-80"
