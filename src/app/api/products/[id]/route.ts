@@ -9,6 +9,7 @@ export async function PUT(request:NextRequest,{params}:{params:Promise<{id:strin
      const {
       name,
       description,
+      productCode,
       price,
       salesPrice,
       stock,
@@ -74,9 +75,10 @@ export async function PUT(request:NextRequest,{params}:{params:Promise<{id:strin
     const updatedProduct = await db.product.update({
       where: { id },
       data: {
+        productCode,
         name,
         slug,
-        description,
+        description, 
         price: Number(price),
         salesPrice: salesPrice ? Number(salesPrice) : null,
         stock: Number(stock),

@@ -206,9 +206,14 @@ export default function Footer() {
             Reach Us
           </h3>
           <div className="mt-8 space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-3">
               < MapPin className="h-4 w-4 shrink-0 text-[#d4af37]" />
-              <p className="text-sm text-[#d8c3a5]">Vellore, Tamil Nadu, India</p>
+              <div>
+                              <p className="text-sm text-[#d8c3a5]">59, Long Bazaar Rd, Vellore, Tamil Nadu 632004</p>
+              <p className='text-sm text-[#d8c3a5]'>No 15, 16, Government Hospital Rd,Gudiyatham, Tamil Nadu 632602</p>
+
+              </div>
+
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 shrink-0 text-[#d4af37]" />

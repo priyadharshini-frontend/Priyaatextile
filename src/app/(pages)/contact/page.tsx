@@ -69,7 +69,7 @@ export default function ContactPage() {
 
             <p className="mt-2 text-gray-500">
 
-              +91 XXXXX XXXXX
+              +91 93459 48849
 
             </p>
 
@@ -90,7 +90,7 @@ export default function ContactPage() {
 
             <p className="mt-2 text-gray-500 break-all">
 
-              support@priyaatextile.com
+             priyaatextile59@gmail.com
 
             </p>
 
@@ -132,7 +132,7 @@ export default function ContactPage() {
 
             <p className="mt-2 text-gray-500">
 
-              9.30 AM - 8.30 PM
+              9.00 AM - 9.00 PM
 
             </p>
 
@@ -190,11 +190,10 @@ export default function ContactPage() {
 
                     <br />
 
-                    Vellore & Gudiyattam
-
+                 59, Long Bazaar Rd, Vellore, Tamil Nadu 632004.
                     <br />
 
-                    Tamil Nadu
+                    No 15, 16, Government Hospital Rd,Gudiyatham, Tamil Nadu 632602
 
                   </p>
 
@@ -220,7 +219,7 @@ export default function ContactPage() {
 
                   <p className="text-gray-600 mt-2">
 
-                    +91 98765 43210
+                    +91 93459 48849
 
                   </p>
 
@@ -246,7 +245,7 @@ export default function ContactPage() {
 
                   <p className="text-gray-600 mt-2">
 
-                    support@priyaatextile.com
+                    priyaatextile59@gmail.com
 
                   </p>
 

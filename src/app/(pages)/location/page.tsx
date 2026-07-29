@@ -13,9 +13,9 @@ const stores = [
     name: "Priyaa Textile - Vellore",
     city: "Vellore",
     address:
-      "No. XX, Main Road, Vellore, Tamil Nadu - 632001",
-    phone: "+91 98765 43210",
-    timing: " 9:30 AM - 8:30 PM",
+      "59, Long Bazaar Rd, Vellore, Tamil Nadu 632004.",
+    phone: "+91 93459 48849",
+    timing: " 9:00 AM - 9:00 PM",
     map: "https://maps.google.com",
     image: "/images/store/vellore.jpg",
   },
@@ -23,9 +23,9 @@ const stores = [
     name: "Priyaa Textile - Gudiyattam",
     city: "Gudiyattam",
     address:
-      "No. XX, Bazaar Street, Gudiyattam, Tamil Nadu - 632602",
-    phone: "+91 98765 43210",
-    timing: " 9:30 AM - 8:30 PM",
+      "No 15, 16, Government Hospital Rd,Gudiyatham, Tamil Nadu 632602",
+    phone: "+91 93459 48849",
+    timing: " 9:00 AM - 9:00 PM",
     map: "https://maps.google.com",
     image: "/images/store/gudiyattam.jpg",
   },
@@ -121,7 +121,7 @@ export default function StoreLocationPage() {
 
             <p className="text-gray-500 mt-2">
 
-              9:30 AM - 8:30 PM
+              9:00 AM - 9:00 PM
 
             </p>
 
