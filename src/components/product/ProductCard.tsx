@@ -34,8 +34,7 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
     try {
       await addToCart(product.id, quantity);
       setJustAdded(true);
-      setTimeout(() => {
-      }, 550);
+      toast.success("Product Added To Cart")
     } catch (error) {
     if (error instanceof Error) {
       if (error.message.includes("Please login first")) {

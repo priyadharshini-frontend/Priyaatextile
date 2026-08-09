@@ -20,6 +20,7 @@ export default function CheckoutClient() {
     state: "",
     pincode: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 const [cartItems, setCartItems] = useState<any[]>([]);
 const [isPaying, setIsPaying] = useState(false);
 const [razorpayLoaded, setRazorpayLoaded] = useState(false);
@@ -48,12 +49,23 @@ const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   }
 };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+const handleChange = (
+  e: React.ChangeEvent<
+    HTMLInputElement | HTMLSelectElement
+  >
+) => {
+  const { name, value } = e.target;
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  setErrors((prev) => ({
+    ...prev,
+    [name]: "",
+  }));
+};
 
 
 //product details checkout
@@ -85,16 +97,6 @@ const fetchBuyNowProduct = async () => {
     console.error(err);
   }
 };
-
-
-
-
-
-
-
-
-
-
 const searchParams = useSearchParams();
 
 const buyNow = searchParams.get("buyNow");
@@ -114,36 +116,54 @@ useEffect(() => {
 
 
 console.log("Cart Items:", cartItems);
+const calculateShipping = (
+  state: string,
+  quantity: number
+) => {
+  if (!state) {
+    return 0;
+  }
+
+  const baseShipping =
+    state === "Tamil Nadu" ? 75 : 100;
+
+  if (quantity <= 1) {
+    return baseShipping;
+  }
+
+  return baseShipping + (quantity - 1) * 25;
+};
 
 //razorpay order
 const handlePayment = async () => {
-  try{
-     const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
+  try {
+    console.log("Subtotal:", subtotal);
+    console.log("Shipping:", shipping);
+    console.log("Total Amount:", total);
 
-  console.log("Total Amount:", total);
-  const res = await fetch("/api/payment/create-order", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    amount: total,
-  }),
-});
+    const res = await fetch(
+      "/api/payment/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: total,
+          subtotal,
+          shipping,
+        }),
+      }
+    );
 
-const order = await res.json();
+    const order = await res.json();
 
-console.log(order);
-openRazorpay(order);
+    console.log("Razorpay Order:", order);
 
+    openRazorpay(order);
+  } catch (error) {
+    console.log("Payment Error:", error);
   }
-  catch(error){
-    console.log(error)
-  }
- 
 };
 
 
@@ -162,7 +182,7 @@ const Razorpay = (window as any).Razorpay;
 
     currency: order.currency,
 
-    name: "Shree priyaa Boutique",
+    name: "Priyaa Textile",
 
     description: "Order Payment",
 
@@ -242,32 +262,104 @@ alert(result.message);
   paymentObject.open();
 };
 
+
+const validateForm = () => {
+  const errors: Record<string, string> = {};
+
+  // Full Name
+  if (!formData.fullName.trim()) {
+    errors.fullName = "Full name is required";
+  } else if (formData.fullName.trim().length < 3) {
+    errors.fullName = "Full name must be at least 3 characters";
+  }
+
+  // Email
+  if (!formData.email.trim()) {
+    errors.email = "Email address is required";
+  } else if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+  ) {
+    errors.email = "Enter a valid email address";
+  }
+
+  // Phone
+  const phone = formData.phone.replace(/\s+/g, "");
+
+  if (!phone) {
+    errors.phone = "Phone number is required";
+  } else if (!/^[6-9]\d{9}$/.test(phone)) {
+    errors.phone = "Enter a valid 10-digit mobile number";
+  }
+
+  // Address
+  if (!formData.address.trim()) {
+    errors.address = "Street address is required";
+  } else if (formData.address.trim().length < 10) {
+    errors.address = "Please enter a complete address";
+  }
+
+  // City
+  if (!formData.city.trim()) {
+    errors.city = "City is required";
+  }
+
+  // State
+  if (!formData.state.trim()) {
+    errors.state = "State is required";
+  }
+
+  // Pincode
+  if (!formData.pincode.trim()) {
+    errors.pincode = "Pincode is required";
+  } else if (!/^[1-9][0-9]{5}$/.test(formData.pincode)) {
+    errors.pincode = "Enter a valid 6-digit pincode";
+  }
+
+  return errors;
+};
+
 const handleContinue = async () => {
   if (isPaying) return;
+
+  const validationErrors = validateForm();
+
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+
+    return;
+  }
+
+  if (cartItems.length === 0) {
+    alert("Cart is empty");
+    return;
+  }
 
   setIsPaying(true);
 
   try {
-    const hasEmptyField = Object.values(formData).some(
-      (value) => value.trim() === ""
-    );
-
-    if (hasEmptyField) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    if (cartItems.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
-
     await handlePayment();
   } finally {
     setIsPaying(false);
   }
 };
+const subtotal = cartItems.reduce(
+  (sum, item) =>
+    sum + item.price * item.qty,
+  0
+);
 
+const totalQuantity = cartItems.reduce(
+  (total, item) =>
+    total + item.qty,
+  0
+);
+
+const shipping = calculateShipping(
+  formData.state,
+  totalQuantity
+);
+
+const total = subtotal + shipping;
 
   return (
     <>
@@ -289,17 +381,19 @@ const handleContinue = async () => {
 
             <ContactForm
               data={formData}
+              errors={errors}
               onChange={handleChange}
             />
 
             <ShippingForm
               data={formData}
+                errors={errors}
               onChange={handleChange}
             />
 
             <button
                onClick={handleContinue}
-              className="relative overflow-hidden w-full h-12 rounded-xl bg-[#7A1F3D] text-white font-semibold text-sm group/btn transition-colors duration-300"
+              className="relative overflow-hidden w-full h-12 rounded-xl bg-[#7A1F3D] text-white font-semibold text-sm group/btn transition-colors duration-300 mt-4"
             >
               <span className="absolute inset-0 bg-white -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300 ease-in-out" />
 
@@ -319,7 +413,7 @@ const handleContinue = async () => {
           {/* Right */}
 
           <div>
-            <OrderSummary items={cartItems} />
+            <OrderSummary items={cartItems}  shipping={shipping}/>
           </div>
 
         </div>

@@ -51,7 +51,7 @@ export default function Sidebar() {
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   return (
-    <aside className="hidden md:flex md:flex-col h-full w-64 bg-[#12141C] text-[#E8E4D9] border-r border-[#22252F]">
+    <aside className="hidden md:flex md:flex-col h-full w-64 bg-[#3D1F1F] text-[#E8E4D9] border-r border-[#22252F]">
       {/* Wordmark */}
       <div className="flex items-center gap-2 px-5 border-b border-[#22252F]">
          <Link href="/" className="font-bold text-[#8b1e1e] flex items-center gap-1">
@@ -93,8 +93,8 @@ export default function Sidebar() {
                     href={item.href}
                     className={`group relative flex items-center gap-3 pl-3 pr-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                       active
-                        ? "bg-[#1C1F29] text-[#E8E4D9]"
-                        : "text-[#A9ABB6] hover:bg-[#1A1D26] hover:text-[#E8E4D9]"
+                        ? "bg-[#832222] text-[#E8E4D9]"
+                        : "text-[#A9ABB6] hover:bg-[#832222] hover:text-[#E8E4D9]"
                     }`}
                   >
                     {/* sliding active rail */}

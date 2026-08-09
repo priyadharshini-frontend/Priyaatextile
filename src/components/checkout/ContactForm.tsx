@@ -6,10 +6,13 @@ interface ContactData {
 
 interface Props {
   data: ContactData;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: Record<string, string>;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }
 
-export default function ContactForm({ data, onChange }: Props) {
+export default function ContactForm({ data,errors, onChange }: Props) {
   return (
     <div className="mb-7">
       <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
@@ -23,37 +26,68 @@ export default function ContactForm({ data, onChange }: Props) {
       </h2>
 
       <div className="flex flex-col gap-4">
-        <Field label="Full name">
-          <input
-            name="fullName"
-            value={data.fullName}
-            onChange={onChange}
-            placeholder="Priya Sharma"
-            className={inputClass}
-          />
-        </Field>
+       <Field label="Full name">
+  <input
+    name="fullName"
+    value={data.fullName}
+    onChange={onChange}
+    placeholder="Priya Sharma"
+    className={`${inputClass} ${
+      errors.fullName
+        ? "border-red-500"
+        : ""
+    }`}
+  />
+
+  {errors.fullName && (
+    <p className="mt-1 text-xs text-red-500">
+      {errors.fullName}
+    </p>
+  )}
+</Field>
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="Email address">
-            <input
-              name="email"
-              type="email"
-              value={data.email}
-              onChange={onChange}
-              placeholder="priya@example.com"
-              className={inputClass}
-            />
-          </Field>
-          <Field label="Phone number">
-            <input
-              name="phone"
-              type="tel"
-              value={data.phone}
-              onChange={onChange}
-              placeholder="+91 98765 43210"
-              className={inputClass}
-            />
-          </Field>
+  <input
+    name="email"
+    type="email"
+    value={data.email}
+    onChange={onChange}
+    placeholder="priya@example.com"
+    className={`${inputClass} ${
+      errors.email
+        ? "border-red-500 focus:border-red-500"
+        : ""
+    }`}
+  />
+
+  {errors.email && (
+    <p className="mt-1 text-xs text-red-500">
+      {errors.email}
+    </p>
+  )}
+</Field>
+       <Field label="Phone number">
+  <input
+    name="phone"
+    type="tel"
+    value={data.phone}
+    onChange={onChange}
+    placeholder="98765 43210"
+    maxLength={10}
+    className={`${inputClass} ${
+      errors.phone
+        ? "border-red-500"
+        : ""
+    }`}
+  />
+
+  {errors.phone && (
+    <p className="mt-1 text-xs text-red-500">
+      {errors.phone}
+    </p>
+  )}
+</Field>
         </div>
       </div>
     </div>

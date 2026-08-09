@@ -11,7 +11,6 @@ import {
    UserStar
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCartCount } from "@/hooks/useCart";
 import { useCartStore } from "@/store/cartStore";
 import CartDrawer from "../cart/CartDrawer";
 
@@ -42,8 +41,13 @@ const sora = Sora({
 export default function Navbar({ user }: NavbarProps) {
   
    
-      const cartCount =
-    useCartStore((s) => s.cartCount);
+     const cartCount = useCartStore(
+  (s) => s.cartCount
+);
+
+const refreshCartCount = useCartStore(
+  (s) => s.refreshCartCount
+);
     const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] =useState(false);
   const router = useRouter();
@@ -59,7 +63,8 @@ export default function Navbar({ user }: NavbarProps) {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+     refreshCartCount();
+  }, [refreshCartCount]);
 
   async function fetchCategories() {
     try {

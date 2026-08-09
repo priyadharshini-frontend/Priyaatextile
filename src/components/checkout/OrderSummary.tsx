@@ -12,22 +12,21 @@ interface CartItem {
 
 interface Props {
   items: CartItem[];
+  shipping: number;
 }
 
-export default function OrderSummary({ items }: Props) {
+export default function OrderSummary({ items,shipping}: Props,) {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
 
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
-  const total = subtotal - discount;
+const subtotal = items.reduce(
+  (sum, i) => sum + i.price * i.qty,
+  0
+);
 
-  const applyCoupon = () => {
-    if (coupon.trim().toUpperCase() === "RAMYA10") {
-      setDiscount(Math.round(subtotal * 0.1));
-    } else {
-      alert("Invalid coupon code");
-    }
-  };
+const total = subtotal + shipping - discount;
+
+
 
   return (
     <div className="bg-white border border-stone-200 rounded-2xl p-6">
@@ -65,9 +64,17 @@ export default function OrderSummary({ items }: Props) {
         </div>
         <div className="flex justify-between text-sm text-gray-500">
           <span>Shipping</span>
-          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700">
-            Free
-          </span>
+         <span
+  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+    shipping === 0
+      ? "bg-green-50 text-green-700"
+      : "bg-stone-100 text-stone-700"
+  }`}
+>
+  {shipping === 0
+    ? "0"
+    : `₹${shipping.toLocaleString("en-IN")}`}
+</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-sm text-green-600">
