@@ -1,4 +1,4 @@
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import { Category } from "@/components/home/Category";
 import { Collection } from "@/components/home/Collection";

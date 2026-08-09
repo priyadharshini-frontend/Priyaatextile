@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/curentUser";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 
 interface Props {
   params: Promise<{

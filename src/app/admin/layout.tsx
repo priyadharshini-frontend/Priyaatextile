@@ -16,7 +16,7 @@
         {/* Main Content */}
         <div className="flex flex-col flex-1">
           {/* Navbar */}
-          <Navbar />
+      
 
           {/* Page content */}
           <main className="flex-1 p-4 overflow-y-auto">

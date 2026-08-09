@@ -1,6 +1,6 @@
 
 // import Wishlist from "@/components/wishlist/wishlist";
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import { getCurrentUser } from "@/lib/curentUser";
 export default async function Page() {
   const user=await getCurrentUser()

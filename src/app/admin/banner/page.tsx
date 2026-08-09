@@ -19,14 +19,27 @@ export default function HeroPage() {
   const [open, setOpen] = useState(false);
 
   const [selectedHero, setSelectedHero] = useState<Hero | null>(null);
+  const [loading,setLoading]=useState(true)
 
   async function fetchHeroes() {
-    const res = await fetch("/api/admin/banner");
+    try{
+      setLoading(true)
+       const res = await fetch("/api/admin/banner");
     const data = await res.json();
 
     if (data.success) {
       setHeroes(data.data);
     }
+
+    }
+    catch(error){
+          console.error("Failed to fetch banner:", error);
+
+    }
+    finally{
+      setLoading(false)
+    }
+   
   }
   async function deleteHeroById(id: string) {
   const confirmed = window.confirm(
@@ -75,14 +88,20 @@ export default function HeroPage() {
           + Add Hero
         </button>
       </div>
+      {loading?(
+       
+          <div className="flex flex-col items-center justify-center gap-2">
+        <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="text-gray-500">Banner loading...</p>
+      </div>
 
-      {heroes.length === 0 ? (
-        <div className="bg-white rounded-xl border p-10 text-center">
-          <p className="text-gray-500">
-            No hero banners found.
-          </p>
-        </div>
-      ) : (
+      
+
+      ):heroes.length==0 ?( 
+ <p className="text-gray-500">Banner Not found</p>
+      )
+
+       : (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
 
           {heroes.map((hero) => (

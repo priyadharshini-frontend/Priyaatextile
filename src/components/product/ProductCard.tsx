@@ -35,7 +35,6 @@ const discountPercent =Math.round(((originalPrice - salePrice) / originalPrice) 
       await addToCart(product.id, quantity);
       setJustAdded(true);
       setTimeout(() => {
-        router.push("/cart");
       }, 550);
     } catch (error) {
     if (error instanceof Error) {

@@ -1,4 +1,4 @@
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import CheckoutClient from "@/components/checkout/CheckoutClient";
 import { getCurrentUser } from "@/lib/curentUser";
 

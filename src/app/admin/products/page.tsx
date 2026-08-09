@@ -10,7 +10,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
-
+const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [product, setProduct] = useState({
@@ -32,10 +32,20 @@ export default function ProductsPage() {
   });
 
   const fetchproduct = async () => {
+    try{
+       setLoading(true);
     const res = await fetch("/api/products");
     const data = await res.json();
     console.log(data);
     setProducts(data.data || []);
+
+    }
+    catch(error){
+       console.error("Failed to fetch products:", error);
+  } finally {
+    setLoading(false);
+  }
+   
   };
 
   const fetchcategory = async () => {
@@ -193,13 +203,22 @@ export default function ProductsPage() {
             </thead>
 
             <tbody>
-              {products.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-6 text-gray-500">
-                    No product found
-                  </td>
-                </tr>
-              ) : (
+          {loading ? (
+  <tr>
+    <td colSpan={5} className="p-8 text-center">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="text-gray-500">Products are loading...</p>
+      </div>
+    </td>
+  </tr>
+) : products.length === 0 ? (
+  <tr>
+    <td colSpan={5} className="p-8 text-center text-gray-500">
+      No products found
+    </td>
+  </tr>
+) : (
                 products.map((p: any) => (
                   <tr key={p.id} className="border-t hover:bg-gray-50">
                     {/* Product Image */}

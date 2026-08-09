@@ -109,8 +109,10 @@ export default function Cart() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading Cart...
+      <div className="min-h-screen flex items-center  flex-col justify-center">
+      <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="text-gray-500">Cart is loading</p>
+
       </div>
     );
   }
@@ -169,14 +171,9 @@ export default function Cart() {
           <OrderSummary
             subtotal={subtotal}
            
-            shipping={shipping}
-            discount={discount}
+            
             total={total}
-            promoCode={promoCode}
-            appliedPromo={appliedPromo}
-            setPromoCode={setPromoCode}
-            applyPromo={applyPromo}
-            removePromo={removePromo}
+           
           />
         </div>
       </div>

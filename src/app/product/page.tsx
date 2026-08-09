@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/curentUser";
 import ProductPageClient from "@/components/product/ProductPageClient";
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/common/footer/footer";
 
 

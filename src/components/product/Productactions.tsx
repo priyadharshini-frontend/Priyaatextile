@@ -22,8 +22,7 @@ export default function ProductActions({
     try {
       await addToCart(productId,qty);
       toast.success("Added to cart");
-      router.push("/cart");
-      
+  
       
     } catch (error) {
       console.log(error);

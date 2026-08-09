@@ -8,6 +8,7 @@ import { useProductStore } from "@/store/ProductStore";
 import { useProducts } from "@/hooks/useProducts";
 import Filter from "./Filter";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { toast } from "sonner";
 
   type SortBy =
     | "featured"

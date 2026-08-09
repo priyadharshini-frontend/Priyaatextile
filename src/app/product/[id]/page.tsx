@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import { getCurrentUser } from "@/lib/curentUser";
 import { getProductById } from "@/lib/product";
 import ProductGallery from "@/components/product/ProductGallery";

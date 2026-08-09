@@ -8,14 +8,17 @@ import {
   ShoppingCart,
   User,
    Package,
+   UserStar
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCartCount } from "@/hooks/useCart";
 import { useCartStore } from "@/store/cartStore";
+import CartDrawer from "../cart/CartDrawer";
 
 
 interface NavbarProps {
   user: {
+    role: string;
     id: string;
     name: string | null;
     mobile: string;
@@ -37,9 +40,11 @@ const sora = Sora({
   weight: ["700"],
 });
 export default function Navbar({ user }: NavbarProps) {
-    useCartCount();
+  
+   
       const cartCount =
     useCartStore((s) => s.cartCount);
+    const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] =useState(false);
   const router = useRouter();
 
@@ -240,26 +245,48 @@ export default function Navbar({ user }: NavbarProps) {
 
         {/* Right */}
         <div className="flex items-center gap-5">
+
+           {user?.role=="ADMIN"?(
+      <div>
+         <button className="relative">
+            <Link href="/admin">
+            < UserStar size={22} />
+            </Link>
+          </button>
+      </div>
+         ):(
+        <></>
+      )
+      
+    }
           <button className="relative">
             <Link href="/my-orders">
             < Package size={22} />
             </Link>
           </button>
 
-          <button className="relative">
-            <Link href="/cart">
+          
+   
+
+          <button className="relative" onClick={() => setCartOpen(true)}>
+            
            
             <ShoppingCart size={22} />
 
             <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#8b1e1e] text-xs text-white">
               {cartCount}
             </span>
-             </Link>
+         
           </button>
+          <CartDrawer
+  isOpen={cartOpen}
+  onClose={() => setCartOpen(false)}
+/>
           
 
          {user ? (
   <div className="relative hidden lg:block group">
+
     {/* Profile Button */}
     <button className="flex items-center gap-2">
       <User size={20} />

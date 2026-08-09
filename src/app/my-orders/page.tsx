@@ -1,4 +1,4 @@
-import Navbar from "@/components/common/navbar/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import { getCurrentUser } from "@/lib/curentUser";
 import Link from "next/link";
 import db from "@/lib/db";
