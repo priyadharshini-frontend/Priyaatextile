@@ -41,7 +41,6 @@ if (featured) {
 
     const url = `/api/products?${params.toString()}`;
 
-    console.log("SERVICE URL:", url);
 
     const res = await fetch(url);
 
