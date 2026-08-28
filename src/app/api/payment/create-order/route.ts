@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
 import db from "@/lib/db";
-import razorpay from "@/lib/razorpay";
+import { getRazorpay } from "@/lib/razorpay";
 
 function calculateShipping(
   state: string,
@@ -89,34 +89,43 @@ export async function POST(req: NextRequest) {
     }
 
     // --------------------------------
+    // RAZORPAY
+    // --------------------------------
+
+    const razorpay = getRazorpay();
+
+    // --------------------------------
     // CHECK FIRST ORDER
     // --------------------------------
 
-    const previousOrder = await db.order.findFirst({
-      where: {
-        userId,
+    const previousOrder =
+      await db.order.findFirst({
+        where: {
+          userId,
 
-        status: {
-          in: [
-            "PAID",
-            "SHIPPED",
-            "DELIVERED",
-          ],
+          status: {
+            in: [
+              "PAID",
+              "SHIPPED",
+              "DELIVERED",
+            ],
+          },
         },
-      },
 
-      select: {
-        id: true,
-      },
-    });
+        select: {
+          id: true,
+        },
+      });
 
     const isFirstOrder = !previousOrder;
 
     console.log("User ID:", userId);
+
     console.log(
       "Previous Order:",
       previousOrder?.id || "NONE"
     );
+
     console.log(
       "Is First Order:",
       isFirstOrder
@@ -179,7 +188,10 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Actual database price
+      // --------------------------------
+      // PRICE
+      // --------------------------------
+
       const price =
         product.salesPrice ??
         product.price;
@@ -187,12 +199,20 @@ export async function POST(req: NextRequest) {
       const subtotal =
         price * quantity;
 
+      // --------------------------------
+      // SHIPPING
+      // --------------------------------
+
       const shipping =
         calculateShipping(
           state || "",
           quantity,
           isFirstOrder
         );
+
+      // --------------------------------
+      // TOTAL
+      // --------------------------------
 
       const total =
         subtotal + shipping;
@@ -213,7 +233,7 @@ export async function POST(req: NextRequest) {
       );
 
       // --------------------------------
-      // RAZORPAY
+      // RAZORPAY ORDER
       // --------------------------------
 
       const amountInPaise =
@@ -248,7 +268,9 @@ export async function POST(req: NextRequest) {
         razorpayOrder.amount
       );
 
-   
+      // --------------------------------
+      // RESPONSE
+      // --------------------------------
 
       return NextResponse.json({
         success: true,
@@ -314,12 +336,19 @@ export async function POST(req: NextRequest) {
       "CART ITEMS:",
       cart.items.map((item) => ({
         id: item.id,
-        productId: item.productId,
-        name: item.product.name,
+
+        productId:
+          item.productId,
+
+        name:
+          item.product.name,
+
         price:
           item.product.salesPrice ??
           item.product.price,
-        quantity: item.quantity,
+
+        quantity:
+          item.quantity,
       }))
     );
 
@@ -392,7 +421,7 @@ export async function POST(req: NextRequest) {
     );
 
     // --------------------------------
-    // RAZORPAY
+    // RAZORPAY ORDER
     // --------------------------------
 
     const amountInPaise =
@@ -421,6 +450,10 @@ export async function POST(req: NextRequest) {
       "RAZORPAY ORDER:",
       razorpayOrder
     );
+
+    // --------------------------------
+    // RESPONSE
+    // --------------------------------
 
     return NextResponse.json({
       success: true,
@@ -451,6 +484,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
+
         message:
           error?.message ||
           "Failed to create Razorpay order",

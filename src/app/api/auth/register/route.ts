@@ -18,9 +18,15 @@ export async function POST(req: NextRequest) {
     }
 
     const {name,mobile,email,password}=validation.data;
+    if (!name || !mobile || !email || !password) {
+  return NextResponse.json(
+    { message: "All fields are required" },
+    { status: 400 }
+  );
+}
 
     const existingUser = await db.user.findUnique({
-      where: { email },
+      where: { email},
     });
 
     if (existingUser) {
@@ -29,6 +35,13 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    if (!email || !email.trim()) {
+  return NextResponse.json(
+    { message: "Email is required" },
+    { status: 400 }
+  );
+}
+const normalizedEmail = email.trim().toLowerCase();
 
     const hashedPassword = await hashPassword(password);
 
@@ -36,7 +49,7 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         mobile,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
       },
     });

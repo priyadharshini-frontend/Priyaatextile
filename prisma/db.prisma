@@ -22,7 +22,7 @@ model User {
   id          String               @id @default(cuid())
   name        String?
   mobile      String               @unique
-  email       String?               @unique
+  email       String               @unique
   password    String
   role        Role                 @default(USER)
   status      String               @default("active")

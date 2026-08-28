@@ -3,8 +3,7 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
 import db from "@/lib/db";
-import razorpay from "@/lib/razorpay";
-
+import { getRazorpay } from "@/lib/razorpay";
 const calculateShipping = (
   state: string,
   quantity: number,
@@ -240,7 +239,7 @@ export async function POST(req: NextRequest) {
     // --------------------------------
     // VERIFY RAZORPAY AMOUNT
     // --------------------------------
-
+   const razorpay = getRazorpay();
     const razorpayOrder =
       await razorpay.orders.fetch(
         razorpay_order_id

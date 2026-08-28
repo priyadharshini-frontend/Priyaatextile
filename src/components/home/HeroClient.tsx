@@ -15,7 +15,7 @@ export default function HeroClient({ hero }: { hero: Hero }) {
   const [isHovering, setIsHovering] = useState(false);
 
   const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const mouseY = useMotionValue(0); 
 
   const springConfig = {
     damping: 20,

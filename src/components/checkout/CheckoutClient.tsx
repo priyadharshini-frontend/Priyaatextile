@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { Lock, ShieldCheck } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import ContactForm from "@/components/checkout/ContactForm";
 import ShippingForm from "@/components/checkout/ShippingForm";
@@ -30,10 +30,19 @@ interface FormData {
 
 export default function CheckoutClient() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // --------------------------------------------------
+  // BUY NOW / CART
+  // --------------------------------------------------
 
   const buyNow = searchParams.get("buyNow") === "true";
   const productId = searchParams.get("productId");
   const qty = Number(searchParams.get("qty") || 1);
+
+  // --------------------------------------------------
+  // STATE
+  // --------------------------------------------------
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -56,7 +65,141 @@ export default function CheckoutClient() {
   // null = still checking
   // true = first order
   // false = returning customer
-  const [isFirstOrder, setIsFirstOrder] = useState<boolean | null>(null);
+  const [isFirstOrder, setIsFirstOrder] = useState<boolean | null>(
+    null
+  );
+
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // --------------------------------------------------
+  // CUSTOM TOAST
+  // --------------------------------------------------
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "error" | "success";
+  } | null>(null);
+
+  const showToast = (
+    message: string,
+    type: "error" | "success" = "error"
+  ) => {
+    setToast({
+      message,
+      type,
+    });
+
+    setTimeout(() => {
+      setToast(null);
+    }, 3000);
+  };
+
+  // --------------------------------------------------
+  // SAVE CURRENT CHECKOUT URL
+  // --------------------------------------------------
+
+  const saveCheckoutRedirect = () => {
+    const currentUrl =
+      window.location.pathname +
+      window.location.search;
+
+    localStorage.setItem(
+      "redirectAfterLogin",
+      currentUrl
+    );
+  };
+
+  // --------------------------------------------------
+  // CHECK AUTHENTICATION
+  // --------------------------------------------------
+
+  const checkAuthentication = async () => {
+    try {
+      /*
+       * Your existing first-order API already requires
+       * the authenticated user.
+       *
+       * Therefore we can use it to determine whether
+       * the customer is logged in.
+       */
+
+      const res = await fetch(
+        "/api/orders/check-first-order",
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        }
+      );
+
+      const data = await res.json();
+
+      console.log(
+        "AUTH / FIRST ORDER RESPONSE:",
+        data
+      );
+
+      // --------------------------------------------
+      // NOT LOGGED IN
+      // --------------------------------------------
+
+      if (res.status === 401) {
+        saveCheckoutRedirect();
+
+        showToast(
+          "Please login to continue checkout."
+        );
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
+
+        return false;
+      }
+
+      // --------------------------------------------
+      // OTHER AUTH FAILURE
+      // --------------------------------------------
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+        console.error(
+          "Authentication check failed:",
+          data.message
+        );
+
+        showToast(
+          data.message ||
+            "Unable to verify your account."
+        );
+
+        return false;
+      }
+
+      // --------------------------------------------
+      // LOGGED IN
+      // --------------------------------------------
+
+      setIsFirstOrder(
+        data.isFirstOrder
+      );
+
+      return true;
+    } catch (error) {
+      console.error(
+        "AUTHENTICATION ERROR:",
+        error
+      );
+
+      showToast(
+        "Unable to verify login. Please try again."
+      );
+
+      return false;
+    }
+  };
 
   // --------------------------------------------------
   // CHECK FIRST ORDER
@@ -64,26 +207,72 @@ export default function CheckoutClient() {
 
   const checkFirstOrder = async () => {
     try {
-      const res = await fetch("/api/orders/check-first-order", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "/api/orders/check-first-order",
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        }
+      );
 
       const data = await res.json();
 
-      console.log("FIRST ORDER API:", data);
+      console.log(
+        "FIRST ORDER API:",
+        data
+      );
 
-      if (!res.ok || !data.success) {
-        console.error("First order check failed:", data.message);
+      // --------------------------------------------
+      // NOT LOGGED IN
+      // --------------------------------------------
 
-        setIsFirstOrder(false);
+      if (res.status === 401) {
+        saveCheckoutRedirect();
+
+        showToast(
+          "Please login to continue checkout."
+        );
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
+
         return;
       }
 
-      setIsFirstOrder(data.isFirstOrder);
+      // --------------------------------------------
+      // API ERROR
+      // --------------------------------------------
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+        console.error(
+          "First order check failed:",
+          data.message
+        );
+
+        // Fail safe:
+        // Don't give free shipping
+        setIsFirstOrder(false);
+
+        return;
+      }
+
+      // --------------------------------------------
+      // SUCCESS
+      // --------------------------------------------
+
+      setIsFirstOrder(
+        data.isFirstOrder
+      );
     } catch (error) {
-      console.error("FIRST ORDER CHECK ERROR:", error);
+      console.error(
+        "FIRST ORDER CHECK ERROR:",
+        error
+      );
 
       // Fail safe:
       // If API fails, don't give free shipping.
@@ -97,28 +286,71 @@ export default function CheckoutClient() {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch("/api/cart", {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "/api/cart",
+        {
+          credentials: "include",
+          cache: "no-store",
+        }
+      );
+
+      // --------------------------------------------
+      // UNAUTHORIZED
+      // --------------------------------------------
+
+      if (res.status === 401) {
+        saveCheckoutRedirect();
+
+        showToast(
+          "Please login to continue checkout."
+        );
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
+
+        return;
+      }
 
       const data = await res.json();
 
-      console.log("CART API:", data);
+      console.log(
+        "CART API:",
+        data
+      );
 
       const formattedItems: CartItem[] =
-        data.data?.items?.map((item: any) => ({
-          id: item.id,
-          name: item.product.name,
-          price: item.product.salesPrice ?? item.product.price,
-          qty: item.quantity,
-          size: item.product.size?.[0] || "",
-          image: item.product.image,
-        })) || [];
+        data.data?.items?.map(
+          (item: any) => ({
+            id: item.id,
 
-      setCartItems(formattedItems);
+            name:
+              item.product.name,
+
+            price:
+              item.product.salesPrice ??
+              item.product.price,
+
+            qty:
+              item.quantity,
+
+            size:
+              item.product.size?.[0] ||
+              "",
+
+            image:
+              item.product.image,
+          })
+        ) || [];
+
+      setCartItems(
+        formattedItems
+      );
     } catch (error) {
-      console.error("FETCH CART ERROR:", error);
+      console.error(
+        "FETCH CART ERROR:",
+        error
+      );
     }
   };
 
@@ -128,40 +360,74 @@ export default function CheckoutClient() {
 
   const fetchBuyNowProduct = async () => {
     if (!productId) {
-      console.error("Product ID missing");
+      console.error(
+        "Product ID missing"
+      );
+
       return;
     }
 
     try {
-      console.log("Product ID:", productId);
+      console.log(
+        "Product ID:",
+        productId
+      );
 
-      const res = await fetch(`/api/products/${productId}`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/products/${productId}`,
+        {
+          cache: "no-store",
+        }
+      );
 
-      const data = await res.json();
+      const data =
+        await res.json();
 
-      console.log("PRODUCT API RESPONSE:", data);
+      console.log(
+        "PRODUCT API RESPONSE:",
+        data
+      );
 
-      if (!res.ok || !data.product) {
-        console.error("Product not found");
+      if (
+        !res.ok ||
+        !data.product
+      ) {
+        console.error(
+          "Product not found"
+        );
+
         return;
       }
 
-      const product = data.product;
+      const product =
+        data.product;
 
       setCartItems([
         {
           id: product.id,
-          name: product.name,
-          image: product.image,
-          price: product.salesPrice ?? product.price,
+
+          name:
+            product.name,
+
+          image:
+            product.image,
+
+          price:
+            product.salesPrice ??
+            product.price,
+
           qty,
-          size: product.size?.[0] || "",
+
+          size:
+            product.size?.[0] ||
+            "",
         },
       ]);
     } catch (error) {
-      console.error("BUY NOW PRODUCT ERROR:", error);
+      console.error(
+        "BUY NOW PRODUCT ERROR:",
+        error
+      );
     }
   };
 
@@ -170,13 +436,50 @@ export default function CheckoutClient() {
   // --------------------------------------------------
 
   useEffect(() => {
-    checkFirstOrder();
+    let mounted = true;
 
-    if (buyNow && productId) {
-      fetchBuyNowProduct();
-    } else {
-      fetchCart();
-    }
+    const initializeCheckout =
+      async () => {
+        setCheckingAuth(true);
+
+        const authenticated =
+          await checkAuthentication();
+
+        if (!mounted) {
+          return;
+        }
+
+        if (!authenticated) {
+          setCheckingAuth(false);
+          return;
+        }
+
+        /*
+         * Authentication succeeded.
+         *
+         * checkAuthentication already returned
+         * the first-order status.
+         */
+
+        if (
+          buyNow &&
+          productId
+        ) {
+          await fetchBuyNowProduct();
+        } else {
+          await fetchCart();
+        }
+
+        if (mounted) {
+          setCheckingAuth(false);
+        }
+      };
+
+    initializeCheckout();
+
+    return () => {
+      mounted = false;
+    };
   }, [buyNow, productId]);
 
   // --------------------------------------------------
@@ -184,28 +487,42 @@ export default function CheckoutClient() {
   // --------------------------------------------------
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement
+    >
   ) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(
+      (prev) => ({
+        ...prev,
+        [name]: value,
+      })
+    );
 
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
+    setErrors(
+      (prev) => ({
+        ...prev,
+        [name]: "",
+      })
+    );
   };
 
   // --------------------------------------------------
   // SHIPPING CALCULATION
   // --------------------------------------------------
 
-  const calculateShipping = (state: string, quantity: number): number => {
+  const calculateShipping = (
+    state: string,
+    quantity: number
+  ): number => {
     // Still checking first-order status
-    if (isFirstOrder === null) {
+    if (
+      isFirstOrder === null
+    ) {
       return 0;
     }
 
@@ -213,7 +530,9 @@ export default function CheckoutClient() {
     // FIRST ORDER = FREE SHIPPING
     // -----------------------------------------------
 
-    if (isFirstOrder === true) {
+    if (
+      isFirstOrder === true
+    ) {
       return 0;
     }
 
@@ -225,262 +544,419 @@ export default function CheckoutClient() {
       return 0;
     }
 
-    const normalizedState = state.trim().toLowerCase();
+    const normalizedState =
+      state
+        .trim()
+        .toLowerCase();
 
-    const baseShipping = normalizedState === "tamil nadu" ? 75 : 100;
+    const baseShipping =
+      normalizedState ===
+      "tamil nadu"
+        ? 75
+        : 100;
 
     if (quantity <= 1) {
       return baseShipping;
     }
 
-    return baseShipping + (quantity - 1) * 25;
+    return (
+      baseShipping +
+      (quantity - 1) * 25
+    );
   };
 
   // --------------------------------------------------
   // SUBTOTAL
   // --------------------------------------------------
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0,
-  );
+  const subtotal =
+    cartItems.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+          item.qty,
+      0
+    );
 
   // --------------------------------------------------
   // TOTAL QUANTITY
   // --------------------------------------------------
 
-  const totalQuantity = cartItems.reduce((total, item) => total + item.qty, 0);
+  const totalQuantity =
+    cartItems.reduce(
+      (total, item) =>
+        total + item.qty,
+      0
+    );
 
   // --------------------------------------------------
   // SHIPPING
   // --------------------------------------------------
 
-  const shipping = calculateShipping(formData.state, totalQuantity);
+  const shipping =
+    calculateShipping(
+      formData.state,
+      totalQuantity
+    );
 
   // --------------------------------------------------
   // FINAL TOTAL
   // --------------------------------------------------
 
-  const total = subtotal + shipping;
+  const total =
+    subtotal + shipping;
 
   // --------------------------------------------------
   // RAZORPAY PAYMENT
   // --------------------------------------------------
 
-  const handlePayment = async () => {
-  try {
-    console.log("=================================");
-    console.log("START PAYMENT");
-    console.log("BUY NOW:", buyNow);
-    console.log("PRODUCT ID:", productId);
-    console.log("QUANTITY:", qty);
-    console.log("STATE:", formData.state);
-    console.log("FRONTEND SUBTOTAL:", subtotal);
-    console.log("FRONTEND SHIPPING:", shipping);
-    console.log("FRONTEND TOTAL:", total);
-    console.log("=================================");
+  const handlePayment =
+    async () => {
+      try {
+        console.log(
+          "================================="
+        );
 
-    const res = await fetch(
-      "/api/payment/create-order",
-      {
-        method: "POST",
+        console.log(
+          "START PAYMENT"
+        );
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+        console.log(
+          "BUY NOW:",
+          buyNow
+        );
 
-        body: JSON.stringify({
-          buyNow,
-          productId,
-          quantity: qty,
-          state: formData.state,
-        }),
+        console.log(
+          "PRODUCT ID:",
+          productId
+        );
+
+        console.log(
+          "QUANTITY:",
+          qty
+        );
+
+        console.log(
+          "STATE:",
+          formData.state
+        );
+
+        console.log(
+          "FRONTEND SUBTOTAL:",
+          subtotal
+        );
+
+        console.log(
+          "FRONTEND SHIPPING:",
+          shipping
+        );
+
+        console.log(
+          "FRONTEND TOTAL:",
+          total
+        );
+
+        console.log(
+          "================================="
+        );
+
+        const res =
+          await fetch(
+            "/api/payment/create-order",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              credentials:
+                "include",
+
+              body: JSON.stringify({
+                buyNow,
+
+                productId,
+
+                quantity: qty,
+
+                state:
+                  formData.state,
+              }),
+            }
+          );
+
+        // ------------------------------------------
+        // UNAUTHORIZED
+        // ------------------------------------------
+
+        if (res.status === 401) {
+          saveCheckoutRedirect();
+
+          showToast(
+            "Your session has expired. Please login again."
+          );
+
+          setTimeout(() => {
+            router.push("/login");
+          }, 1200);
+
+          return;
+        }
+
+        const order =
+          await res.json();
+
+        console.log(
+          "CREATE ORDER RESPONSE:",
+          order
+        );
+
+        if (
+          !res.ok ||
+          !order.success
+        ) {
+          showToast(
+            order.message ||
+              "Unable to create payment"
+          );
+
+          return;
+        }
+
+        openRazorpay(order);
+      } catch (error) {
+        console.error(
+          "PAYMENT ERROR:",
+          error
+        );
+
+        showToast(
+          "Something went wrong while starting payment."
+        );
       }
-    );
-
-    const order = await res.json();
-
-    console.log(
-      "================================="
-    );
-
-    console.log(
-      "CREATE ORDER RESPONSE:",
-      order
-    );
-
-    console.log(
-      "RAZORPAY AMOUNT:",
-      order.amount
-    );
-
-    console.log(
-      "RAZORPAY AMOUNT INR:",
-      order.amount
-        ? order.amount / 100
-        : null
-    );
-
-    console.log(
-      "SERVER SUBTOTAL:",
-      order.subtotal
-    );
-
-    console.log(
-      "SERVER SHIPPING:",
-      order.shipping
-    );
-
-    console.log(
-      "SERVER TOTAL:",
-      order.total
-    );
-
-    console.log(
-      "FIRST ORDER:",
-      order.isFirstOrder
-    );
-
-    console.log(
-      "================================="
-    );
-
-    if (!res.ok || !order.success) {
-      alert(
-        order.message ||
-          "Unable to create payment"
-      );
-
-      return;
-    }
-
-    openRazorpay(order);
-  } catch (error) {
-    console.error(
-      "PAYMENT ERROR:",
-      error
-    );
-
-    alert(
-      "Something went wrong while starting payment."
-    );
-  }
-};
+    };
 
   // --------------------------------------------------
   // OPEN RAZORPAY
   // --------------------------------------------------
 
-  const openRazorpay = (order: any) => {
-    if (!razorpayLoaded || !(window as any).Razorpay) {
-      alert("Razorpay SDK is still loading. Please try again.");
+  const openRazorpay = (
+    order: any
+  ) => {
+    if (
+      !razorpayLoaded ||
+      !(window as any).Razorpay
+    ) {
+      showToast(
+        "Razorpay SDK is still loading. Please try again."
+      );
+
       return;
     }
 
-    const Razorpay = (window as any).Razorpay;
+    const Razorpay =
+      (window as any).Razorpay;
 
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key:
+        process.env
+          .NEXT_PUBLIC_RAZORPAY_KEY_ID,
 
-      amount: order.amount,
+      amount:
+        order.amount,
 
-      currency: order.currency,
+      currency:
+        order.currency,
 
-      name: "Priyaa Textile",
+      name:
+        "Priyaa Textile",
 
-      description: isFirstOrder
-        ? "First Order - Free Shipping"
-        : "Order Payment",
+      description:
+        isFirstOrder
+          ? "First Order - Free Shipping"
+          : "Order Payment",
 
-      order_id: order.id,
+      order_id:
+        order.id,
 
       prefill: {
-        name: formData.fullName,
-        email: formData.email,
-        contact: formData.phone,
+        name:
+          formData.fullName,
+
+        email:
+          formData.email,
+
+        contact:
+          formData.phone,
       },
 
       theme: {
-        color: "#7A1F3D",
+        color:
+          "#7A1F3D",
       },
 
       modal: {
         ondismiss: () => {
-          console.log("Payment cancelled");
+          console.log(
+            "Payment cancelled"
+          );
         },
       },
 
-      handler: async (response: any) => {
-        try {
-          console.log("RAZORPAY PAYMENT RESPONSE:", response);
+      handler:
+        async (
+          response: any
+        ) => {
+          try {
+            console.log(
+              "RAZORPAY PAYMENT RESPONSE:",
+              response
+            );
 
-          const payload = {
-            razorpay_order_id: response.razorpay_order_id,
+            const payload = {
+              razorpay_order_id:
+                response.razorpay_order_id,
 
-            razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_payment_id:
+                response.razorpay_payment_id,
 
-            razorpay_signature: response.razorpay_signature,
+              razorpay_signature:
+                response.razorpay_signature,
 
-            shipping: {
-              fullName: formData.fullName,
-              phone: formData.phone,
-              address: formData.address,
-              city: formData.city,
-              state: formData.state,
-              pincode: formData.pincode,
-            },
+              shipping: {
+                fullName:
+                  formData.fullName,
 
-            buyNow: !!buyNow,
+                phone:
+                  formData.phone,
 
-            productId,
+                address:
+                  formData.address,
 
-            quantity: qty,
-          };
+                city:
+                  formData.city,
 
-          const verifyApi = buyNow
-            ? "/api/payment/verify-buy-now"
-            : "/api/payment/verify";
+                state:
+                  formData.state,
 
-          const res = await fetch(verifyApi, {
-            method: "POST",
+                pincode:
+                  formData.pincode,
+              },
 
-            headers: {
-              "Content-Type": "application/json",
-            },
+              buyNow:
+                !!buyNow,
 
-            credentials: "include",
+              productId,
 
-            body: JSON.stringify(payload),
-          });
+              quantity:
+                qty,
+            };
 
-          const result = await res.json();
+            const verifyApi =
+              buyNow
+                ? "/api/payment/verify-buy-now"
+                : "/api/payment/verify";
 
-          console.log("VERIFY PAYMENT RESULT:", result);
+            const res =
+              await fetch(
+                verifyApi,
+                {
+                  method:
+                    "POST",
 
-          if (result.success) {
-            window.location.href = `/order-success?orderId=${result.orderId}`;
+                  headers: {
+                    "Content-Type":
+                      "application/json",
+                  },
 
-            return;
+                  credentials:
+                    "include",
+
+                  body:
+                    JSON.stringify(
+                      payload
+                    ),
+                }
+              );
+
+            // ----------------------------------
+            // UNAUTHORIZED
+            // ----------------------------------
+
+            if (
+              res.status === 401
+            ) {
+              saveCheckoutRedirect();
+
+              showToast(
+                "Please login again to complete your order."
+              );
+
+              setTimeout(() => {
+                router.push(
+                  "/login"
+                );
+              }, 1200);
+
+              return;
+            }
+
+            const result =
+              await res.json();
+
+            console.log(
+              "VERIFY PAYMENT RESULT:",
+              result
+            );
+
+            if (
+              result.success
+            ) {
+              window.location.href =
+                `/order-success?orderId=${result.orderId}`;
+
+              return;
+            }
+
+            showToast(
+              result.message ||
+                "Payment verification failed."
+            );
+          } catch (error) {
+            console.error(
+              "PAYMENT VERIFICATION ERROR:",
+              error
+            );
+
+            showToast(
+              "Payment was completed, but order verification failed. Please contact support."
+            );
           }
-
-          alert(result.message || "Payment verification failed.");
-        } catch (error) {
-          console.error("PAYMENT VERIFICATION ERROR:", error);
-
-          alert(
-            "Payment was completed, but order verification failed. Please contact support.",
-          );
-        }
-      },
+        },
     };
 
-    const paymentObject = new Razorpay(options);
+    const paymentObject =
+      new Razorpay(
+        options
+      );
 
-    paymentObject.on("payment.failed", (response: any) => {
-      console.error("RAZORPAY PAYMENT FAILED:", response.error);
+    paymentObject.on(
+      "payment.failed",
+      (response: any) => {
+        console.error(
+          "RAZORPAY PAYMENT FAILED:",
+          response.error
+        );
 
-      alert(response.error?.description || "Payment failed. Please try again.");
-    });
+        showToast(
+          response.error
+            ?.description ||
+            "Payment failed. Please try again."
+        );
+      }
+    );
 
     paymentObject.open();
   };
@@ -489,95 +965,213 @@ export default function CheckoutClient() {
   // FORM VALIDATION
   // --------------------------------------------------
 
-  const validateForm = () => {
-    const validationErrors: Record<string, string> = {};
+  const validateForm =
+    () => {
+      const validationErrors: Record<
+        string,
+        string
+      > = {};
 
-    // Full Name
-    if (!formData.fullName.trim()) {
-      validationErrors.fullName = "Full name is required";
-    } else if (formData.fullName.trim().length < 3) {
-      validationErrors.fullName = "Full name must be at least 3 characters";
-    }
+      // Full Name
+      if (
+        !formData.fullName.trim()
+      ) {
+        validationErrors.fullName =
+          "Full name is required";
+      } else if (
+        formData.fullName
+          .trim()
+          .length < 3
+      ) {
+        validationErrors.fullName =
+          "Full name must be at least 3 characters";
+      }
 
-    // Email
-    if (!formData.email.trim()) {
-      validationErrors.email = "Email address is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      validationErrors.email = "Enter a valid email address";
-    }
+      // Email
+      if (
+        !formData.email.trim()
+      ) {
+        validationErrors.email =
+          "Email address is required";
+      } else if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+          formData.email
+        )
+      ) {
+        validationErrors.email =
+          "Enter a valid email address";
+      }
 
-    // Phone
-    const phone = formData.phone.replace(/\s+/g, "");
+      // Phone
+      const phone =
+        formData.phone.replace(
+          /\s+/g,
+          ""
+        );
 
-    if (!phone) {
-      validationErrors.phone = "Phone number is required";
-    } else if (!/^[6-9]\d{9}$/.test(phone)) {
-      validationErrors.phone = "Enter a valid 10-digit mobile number";
-    }
+      if (!phone) {
+        validationErrors.phone =
+          "Phone number is required";
+      } else if (
+        !/^[6-9]\d{9}$/.test(
+          phone
+        )
+      ) {
+        validationErrors.phone =
+          "Enter a valid 10-digit mobile number";
+      }
 
-    // Address
-    if (!formData.address.trim()) {
-      validationErrors.address = "Street address is required";
-    } else if (formData.address.trim().length < 10) {
-      validationErrors.address = "Please enter a complete address";
-    }
+      // Address
+      if (
+        !formData.address.trim()
+      ) {
+        validationErrors.address =
+          "Street address is required";
+      } else if (
+        formData.address
+          .trim()
+          .length < 10
+      ) {
+        validationErrors.address =
+          "Please enter a complete address";
+      }
 
-    // City
-    if (!formData.city.trim()) {
-      validationErrors.city = "City is required";
-    }
+      // City
+      if (
+        !formData.city.trim()
+      ) {
+        validationErrors.city =
+          "City is required";
+      }
 
-    // State
-    if (!formData.state.trim()) {
-      validationErrors.state = "State is required";
-    }
+      // State
+      if (
+        !formData.state.trim()
+      ) {
+        validationErrors.state =
+          "State is required";
+      }
 
-    // Pincode
-    if (!formData.pincode.trim()) {
-      validationErrors.pincode = "Pincode is required";
-    } else if (!/^[1-9][0-9]{5}$/.test(formData.pincode)) {
-      validationErrors.pincode = "Enter a valid 6-digit pincode";
-    }
+      // Pincode
+      if (
+        !formData.pincode.trim()
+      ) {
+        validationErrors.pincode =
+          "Pincode is required";
+      } else if (
+        !/^[1-9][0-9]{5}$/.test(
+          formData.pincode
+        )
+      ) {
+        validationErrors.pincode =
+          "Enter a valid 6-digit pincode";
+      }
 
-    return validationErrors;
-  };
+      return validationErrors;
+    };
 
   // --------------------------------------------------
   // CONTINUE TO PAYMENT
   // --------------------------------------------------
 
-  const handleContinue = async () => {
-    if (isPaying) {
-      return;
-    }
+  const handleContinue =
+    async () => {
+      if (isPaying) {
+        return;
+      }
 
-    // Don't allow payment before first-order
-    // check has completed.
-    if (isFirstOrder === null) {
-      alert("Please wait while we check your first-order offer.");
-      return;
-    }
+      // --------------------------------------------
+      // AUTH CHECK
+      // --------------------------------------------
 
-    const validationErrors = validateForm();
+      /*
+       * Backend will also verify authentication.
+       * This is an additional frontend protection.
+       */
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+      if (checkingAuth) {
+        showToast(
+          "Please wait while we verify your account."
+        );
 
-    if (cartItems.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
+        return;
+      }
 
-    setIsPaying(true);
+      // --------------------------------------------
+      // FIRST ORDER CHECK
+      // --------------------------------------------
 
-    try {
-      await handlePayment();
-    } finally {
-      setIsPaying(false);
-    }
-  };
+      if (
+        isFirstOrder === null
+      ) {
+        showToast(
+          "Please wait while we check your first-order offer."
+        );
+
+        return;
+      }
+
+      // --------------------------------------------
+      // FORM VALIDATION
+      // --------------------------------------------
+
+      const validationErrors =
+        validateForm();
+
+      if (
+        Object.keys(
+          validationErrors
+        ).length > 0
+      ) {
+        setErrors(
+          validationErrors
+        );
+
+        return;
+      }
+
+      // --------------------------------------------
+      // CART CHECK
+      // --------------------------------------------
+
+      if (
+        cartItems.length === 0
+      ) {
+        showToast(
+          "Cart is empty"
+        );
+
+        return;
+      }
+
+      // --------------------------------------------
+      // PAYMENT
+      // --------------------------------------------
+
+      setIsPaying(true);
+
+      try {
+        await handlePayment();
+      } finally {
+        setIsPaying(false);
+      }
+    };
+
+  // --------------------------------------------------
+  // AUTH CHECKING SCREEN
+  // --------------------------------------------------
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-[#7A1F3D] rounded-full animate-spin" />
+
+        <p className="mt-4 text-gray-600 text-sm">
+          Checking your account...
+        </p>
+      </div>
+    );
+  }
 
   // --------------------------------------------------
   // RENDER
@@ -585,39 +1179,84 @@ export default function CheckoutClient() {
 
   return (
     <>
+      {/* ------------------------------------------- */}
+      {/* TOAST */}
+      {/* ------------------------------------------- */}
+
+      {toast && (
+        <div
+          className={`fixed top-5 right-5 z-[9999] max-w-sm px-5 py-3 rounded-xl shadow-lg text-sm font-medium text-white ${
+            toast.type === "error"
+              ? "bg-red-600"
+              : "bg-green-600"
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
+
+      {/* ------------------------------------------- */}
+      {/* RAZORPAY SCRIPT */}
+      {/* ------------------------------------------- */}
+
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="afterInteractive"
         onLoad={() => {
-          console.log("Razorpay SDK Loaded");
-          setRazorpayLoaded(true);
+          console.log(
+            "Razorpay SDK Loaded"
+          );
+
+          setRazorpayLoaded(
+            true
+          );
         }}
         onError={() => {
-          console.error("Failed to load Razorpay SDK");
-          setRazorpayLoaded(false);
+          console.error(
+            "Failed to load Razorpay SDK"
+          );
+
+          setRazorpayLoaded(
+            false
+          );
         }}
       />
 
+      {/* ------------------------------------------- */}
+      {/* CHECKOUT */}
+      {/* ------------------------------------------- */}
+
       <div className="max-w-5xl mx-auto px-4 py-10 mt-30">
         <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6">
+
+          {/* --------------------------------------- */}
           {/* LEFT SIDE */}
+          {/* --------------------------------------- */}
 
           <div className="bg-white border border-stone-200 rounded-2xl p-7">
+
             <ContactForm
               data={formData}
               errors={errors}
-              onChange={handleChange}
+              onChange={
+                handleChange
+              }
             />
 
             <ShippingForm
               data={formData}
               errors={errors}
-              onChange={handleChange}
+              onChange={
+                handleChange
+              }
             />
 
+            {/* ----------------------------------- */}
             {/* FIRST ORDER OFFER */}
+            {/* ----------------------------------- */}
 
-            {isFirstOrder === true && (
+            {isFirstOrder ===
+              true && (
               <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-center">
                 <p className="text-sm font-semibold text-green-700">
                   🎉 First Order Offer
@@ -629,51 +1268,78 @@ export default function CheckoutClient() {
               </div>
             )}
 
+            {/* ----------------------------------- */}
             {/* RETURNING CUSTOMER */}
+            {/* ----------------------------------- */}
 
-            {isFirstOrder === false && (
+            {isFirstOrder ===
+              false && (
               <div className="mt-4 rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-center">
                 <p className="text-xs text-stone-600">
-                  Shipping charges are calculated based on your delivery
-                  location.
+                  Shipping charges are calculated based on your delivery location.
                 </p>
               </div>
             )}
 
+            {/* ----------------------------------- */}
+            {/* PAYMENT BUTTON */}
+            {/* ----------------------------------- */}
+
             <button
               type="button"
-              onClick={handleContinue}
+              onClick={
+                handleContinue
+              }
               disabled={
-                isPaying || isFirstOrder === null || cartItems.length === 0
+                isPaying ||
+                checkingAuth ||
+                isFirstOrder ===
+                  null ||
+                cartItems.length ===
+                  0
               }
               className="relative overflow-hidden w-full h-12 rounded-xl bg-[#7A1F3D] text-white font-semibold text-sm group/btn transition-colors duration-300 mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="absolute inset-0 bg-white -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300 ease-in-out" />
 
               <span className="relative z-10 flex items-center justify-center gap-2 group-hover/btn:text-[#7A1F3D] transition-colors duration-300">
-                <Lock size={15} />
+                <Lock
+                  size={15}
+                />
 
                 {isPaying
                   ? "Processing..."
-                  : isFirstOrder === null
+                  : isFirstOrder ===
+                      null
                     ? "Checking offer..."
                     : "Continue to Payment"}
               </span>
             </button>
 
             <p className="flex items-center justify-center gap-2 text-xs text-gray-400 mt-3">
-              <ShieldCheck size={14} />
+              <ShieldCheck
+                size={14}
+              />
+
               Your information is encrypted and secure.
             </p>
           </div>
 
+          {/* --------------------------------------- */}
           {/* RIGHT SIDE */}
+          {/* --------------------------------------- */}
 
           <div>
             <OrderSummary
-              items={cartItems}
-              shipping={shipping}
-              isFirstOrder={isFirstOrder}
+              items={
+                cartItems
+              }
+              shipping={
+                shipping
+              }
+              isFirstOrder={
+                isFirstOrder
+              }
             />
           </div>
         </div>
