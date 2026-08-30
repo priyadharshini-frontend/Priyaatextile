@@ -238,16 +238,14 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     const [products, totalProducts] = await Promise.all([
-      db.product.findMany({
-        where,
-        include: {
-          category: true,
-          subCategory: true,
-        },
-        orderBy,
-        skip,
-        take: limit,
-      }),
+    db.product.findMany({
+  where,
+  include: {
+    category: true,
+    subCategory: true,
+  },
+  orderBy,
+}),
 
       db.product.count({
         where,
