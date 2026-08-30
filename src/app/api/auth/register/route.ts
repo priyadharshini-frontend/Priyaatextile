@@ -3,45 +3,41 @@ import db from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { registerSchema } from "@/schemas/auth.schema";
 
-
 export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
 
-    const body=await req.json();
-    const validation=registerSchema.safeParse(body);
-    if(!validation.success){
-      return NextResponse.json({
-        message:validation.error.issues[0].message,
-      },{
-        status:400
-      })
+    const validation = registerSchema.safeParse(body);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          message: validation.error.issues[0].message,
+        },
+        {
+          status: 400,
+        }
+      );
     }
 
-    const {name,mobile,email,password}=validation.data;
-    if (!name || !mobile || !email || !password) {
-  return NextResponse.json(
-    { message: "All fields are required" },
-    { status: 400 }
-  );
-}
+    const { name, mobile, password } = validation.data;
 
     const existingUser = await db.user.findUnique({
-      where: { email},
+      where: {
+        mobile,
+      },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { message: "User already exists" },
-        { status: 400 }
+        {
+          message: "Mobile number already registered",
+        },
+        {
+          status: 400,
+        }
       );
     }
-    if (!email || !email.trim()) {
-  return NextResponse.json(
-    { message: "Email is required" },
-    { status: 400 }
-  );
-}
-const normalizedEmail = email.trim().toLowerCase();
 
     const hashedPassword = await hashPassword(password);
 
@@ -49,35 +45,45 @@ const normalizedEmail = email.trim().toLowerCase();
       data: {
         name,
         mobile,
-        email: normalizedEmail,
         password: hashedPassword,
       },
     });
 
     return NextResponse.json(
       {
-        message: "User created Successfully",
+        message: "User created successfully",
         User: {
-    id: user.id,
-    name: user.name,
-    mobile:user.mobile,
-    email: user.email,
-
-    
-  }
+          id: user.id,
+          name: user.name,
+          mobile: user.mobile,
+          email: user.email,
+        },
       },
-      { status: 201 }
+      {
+        status: 201,
+      }
     );
-          console.log("user created")
-
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
 
+    if (error?.code === "P2002") {
+      return NextResponse.json(
+        {
+          message: "Mobile number already registered",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     return NextResponse.json(
-      { message: "Server error" },
-      { status: 500 }
+      {
+        message: "Server error",
+      },
+      {
+        status: 500,
+      }
     );
   }
-
-
 }
