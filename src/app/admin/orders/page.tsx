@@ -39,40 +39,6 @@ export default async function AdminOrdersPage() {
             </p>
           </div>
 
-          <button className="bg-[#7A1F3D] text-white px-6 py-3 rounded-xl hover:bg-[#651633] transition">
-            Export Orders
-          </button>
-        </div>
-
-        {/* Filters */}
-
-        <div className="bg-white rounded-2xl shadow-sm border p-5 mb-6">
-
-          <div className="grid md:grid-cols-3 gap-4">
-
-            <input
-              type="text"
-              placeholder="Search Order ID..."
-              className="border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#7A1F3D]"
-            />
-
-            <select className="border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#7A1F3D]">
-              <option>All Status</option>
-              <option>PENDING</option>
-              <option>PAID</option>
-              <option>CONFIRMED</option>
-              <option>PACKED</option>
-              <option>SHIPPED</option>
-              <option>DELIVERED</option>
-              <option>CANCELLED</option>
-            </select>
-
-            <button className="bg-[#7A1F3D] text-white rounded-xl">
-              Search
-            </button>
-
-          </div>
-
         </div>
 
         {/* Table */}
