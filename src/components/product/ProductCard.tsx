@@ -156,7 +156,7 @@ export default function ProductCard({ product }: Props) {
           <span
             className="absolute top-3 left-3 z-30 rounded-full px-3 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-md"
             style={{
-              backgroundColor: "#ef2019",
+              backgroundColor: "#a70c07",
             }}
           >
             OUT OF STOCK
